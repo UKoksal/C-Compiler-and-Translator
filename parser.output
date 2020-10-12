@@ -1,0 +1,3871 @@
+State 43 conflicts: 1 shift/reduce
+State 92 conflicts: 1 shift/reduce
+State 93 conflicts: 1 shift/reduce
+State 133 conflicts: 17 shift/reduce
+State 136 conflicts: 1 shift/reduce
+State 141 conflicts: 1 shift/reduce
+State 210 conflicts: 1 reduce/reduce
+
+
+Grammar
+
+    0 $accept: ROOT $end
+
+    1 ROOT: PROG
+
+    2 PROG: PROGELEMENT
+    3     | PROGELEMENT PROG
+
+    4 PROGELEMENT: VARIABLEDECLARATION colon
+    5            | ARRAYDECLARATION colon
+    6            | ENUMERATIONSPECIFIER colon
+    7            | FUNTIONDECLARATION colon
+    8            | FUNCTIONDEFINITION
+
+    9 FUNTIONDECLARATION: dataType identifier lBracket PARAMETERLIST rBracket
+
+   10 FUNCTIONDEFINITION: dataType identifier lBracket PARAMETERLIST rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   11                   | dataType identifier lBracket PARAMETERLIST rBracket lCurlyBracket rCurlyBracket
+
+   12 VARIABLEDECLARATION: dataType identifier
+   13                    | dataType identifier assign LOGICALOREXPRESSION
+   14                    | identifier identifier
+
+   15 ARRAYDECLARATION: dataType identifier lSquareBracket LOGICALOREXPRESSION rSquareBracket
+
+   16 PARAMETERLIST: dataType identifier comma PARAMETERLIST
+   17              | dataType identifier
+   18              | %empty
+
+   19 STATEMENTLIST: STATEMENT
+   20              | STATEMENT STATEMENTLIST
+
+   21 BREAKSTATEMENT: breakT
+
+   22 CONTINUESTATEMENT: continueT
+
+   23 STATEMENT: LOOP
+   24          | VARIABLEDECLARATION colon
+   25          | ARRAYDECLARATION colon
+   26          | ASSIGNMENT colon
+   27          | BREAKSTATEMENT colon
+   28          | CONTINUESTATEMENT colon
+   29          | CONDITIONAL
+   30          | ENUMERATIONSPECIFIER colon
+   31          | colon
+   32          | RETURNSTATEMENT
+   33          | FUNCTIONCALL colon
+   34          | LOGICALOREXPRESSION colon
+
+   35 ASSIGNMENT: identifier assign ASSIGNMENT
+   36           | SUBSCRIPT assign LOGICALOREXPRESSION
+   37           | FACTOR plusEquals FACTOR
+   38           | FACTOR minusEquals FACTOR
+   39           | FACTOR timesEquals FACTOR
+   40           | FACTOR divEquals FACTOR
+   41           | FACTOR modEquals FACTOR
+   42           | FACTOR andEquals FACTOR
+   43           | FACTOR orEquals FACTOR
+   44           | FACTOR xorEquals FACTOR
+   45           | FACTOR lShiftEquals FACTOR
+   46           | FACTOR rShiftEquals FACTOR
+   47           | LOGICALOREXPRESSION
+
+   48 ENUMERATIONSPECIFIER: enumT identifier lCurlyBracket ENUMERATORLIST rCurlyBracket
+
+   49 ENUMERATORLIST: ENUMERATOR
+   50               | ENUMERATOR comma
+   51               | ENUMERATOR comma ENUMERATORLIST
+
+   52 ENUMERATOR: identifier assign LOGICALOREXPRESSION
+   53           | identifier
+
+   54 FUNCTIONCALL: identifier lBracket CONCRETEPARAMETERLIST rBracket
+
+   55 CONCRETEPARAMETERLIST: LOGICALOREXPRESSION comma CONCRETEPARAMETERLIST
+   56                      | LOGICALOREXPRESSION
+   57                      | %empty
+
+   58 RETURNSTATEMENT: ret LOGICALOREXPRESSION colon
+
+   59 LOOP: loopWhile lBracket LOGICALOREXPRESSION rBracket STATEMENTLIST
+   60     | loopWhile lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   61     | loopWhile lBracket LOGICALOREXPRESSION rBracket lCurlyBracket rCurlyBracket
+   62     | loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket STATEMENTLIST
+   63     | loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   64     | loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket lCurlyBracket rCurlyBracket
+
+   65 CONDITIONAL: condIf lBracket LOGICALOREXPRESSION rBracket STATEMENTLIST
+   66            | condIf lBracket LOGICALOREXPRESSION rBracket STATEMENTLIST condElse STATEMENTLIST
+   67            | condIf lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket condElse STATEMENTLIST
+   68            | condIf lBracket LOGICALOREXPRESSION rBracket STATEMENTLIST condElse lCurlyBracket STATEMENTLIST rCurlyBracket
+   69            | condIf lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   70            | condIf lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket condElse lCurlyBracket STATEMENTLIST rCurlyBracket
+   71            | condSwitch lBracket LOGICALOREXPRESSION rBracket lCurlyBracket CASELIST rCurlyBracket
+
+   72 CASELIST: CASE
+   73         | CASE CASELIST
+   74         | STATEMENTLIST CASELIST
+   75         | %empty
+
+   76 CASE: caseT LOGICALOREXPRESSION colonT STATEMENTLIST
+   77     | defaultT colonT STATEMENTLIST
+
+   78 SUBSCRIPT: identifier lSquareBracket LOGICALOREXPRESSION rSquareBracket
+
+   79 EQUALITYEXPRESSION: RELATIONALEXPRESSION
+   80                   | EQUALITYEXPRESSION equalsOp RELATIONALEXPRESSION
+   81                   | EQUALITYEXPRESSION notEqualOp RELATIONALEXPRESSION
+
+   82 ANDEXPRESSION: EQUALITYEXPRESSION
+   83              | ANDEXPRESSION bitWiseAndOp EQUALITYEXPRESSION
+
+   84 EXCLUSIVEOREXPRESSION: ANDEXPRESSION
+   85                      | EXCLUSIVEOREXPRESSION bitWiseEorOp ANDEXPRESSION
+
+   86 INCLUSIVEOREXPRESSION: EXCLUSIVEOREXPRESSION
+   87                      | INCLUSIVEOREXPRESSION bitWiseIorOp EXCLUSIVEOREXPRESSION
+
+   88 LOGICALANDEXPRESSION: INCLUSIVEOREXPRESSION
+   89                     | LOGICALANDEXPRESSION logicalAndOp INCLUSIVEOREXPRESSION
+
+   90 LOGICALOREXPRESSION: LOGICALANDEXPRESSION
+   91                    | LOGICALOREXPRESSION logicalOrOp LOGICALANDEXPRESSION
+
+   92 RELATIONALEXPRESSION: SHIFTEXPRESSION
+   93                     | RELATIONALEXPRESSION lt SHIFTEXPRESSION
+   94                     | RELATIONALEXPRESSION gt SHIFTEXPRESSION
+   95                     | RELATIONALEXPRESSION lte SHIFTEXPRESSION
+   96                     | RELATIONALEXPRESSION gte SHIFTEXPRESSION
+   97                     | RELATIONALEXPRESSION equalsOp SHIFTEXPRESSION
+
+   98 SHIFTEXPRESSION: ADDITIVEEXPRESSION
+   99                | SHIFTEXPRESSION leftOp ADDITIVEEXPRESSION
+  100                | SHIFTEXPRESSION rightOp ADDITIVEEXPRESSION
+
+  101 ADDITIVEEXPRESSION: MULTIPLICATIVEEXPRESSION
+  102                   | ADDITIVEEXPRESSION plus MULTIPLICATIVEEXPRESSION
+  103                   | ADDITIVEEXPRESSION minus MULTIPLICATIVEEXPRESSION
+
+  104 MULTIPLICATIVEEXPRESSION: FACTOR plusPlus
+  105                         | FACTOR minusMinus
+  106                         | plusPlus FACTOR
+  107                         | minusMinus FACTOR
+  108                         | MULTIPLICATIVEEXPRESSION times FACTOR
+  109                         | MULTIPLICATIVEEXPRESSION divide FACTOR
+  110                         | MULTIPLICATIVEEXPRESSION modulo FACTOR
+  111                         | FACTOR
+
+  112 UNARYMINUS: minus FACTOR
+  113           | logicalNotOp FACTOR
+
+  114 FACTOR: number
+  115       | lBracket RELATIONALEXPRESSION rBracket
+  116       | identifier
+  117       | SUBSCRIPT
+  118       | FUNCTIONCALL
+  119       | UNARYMINUS
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+times (258) 108
+divide (259) 109
+plus (260) 102
+minus (261) 103 112
+assign (262) 13 35 36 52
+condIf (263) 65 66 67 68 69 70
+condElse (264) 66 67 68 70
+notEqualOp (265) 81
+bitWiseAndOp (266) 83
+bitWiseIorOp (267) 87
+bitWiseEorOp (268) 85
+logicalAndOp (269) 89
+logicalOrOp (270) 91
+lBracket (271) 9 10 11 54 59 60 61 62 63 64 65 66 67 68 69 70 71 115
+rBracket (272) 9 10 11 54 59 60 61 62 63 64 65 66 67 68 69 70 71 115
+lCurlyBracket (273) 10 11 48 60 61 63 64 67 68 69 70 71
+rCurlyBracket (274) 10 11 48 60 61 63 64 67 68 69 70 71
+plusEquals (275) 37
+minusEquals (276) 38
+timesEquals (277) 39
+comma (278) 16 50 51 55
+breakT (279) 21
+enumT (280) 48
+divEquals (281) 40
+modEquals (282) 41
+andEquals (283) 42
+orEquals (284) 43
+xorEquals (285) 44
+lShiftEquals (286) 45
+logicalNotOp (287) 113
+rShiftEquals (288) 46
+number (289) 114
+identifier (290) 9 10 11 12 13 14 15 16 17 35 48 52 53 54 78 116
+dataType (291) 9 10 11 12 13 15 16 17
+colon (292) 4 5 6 7 24 25 26 27 28 30 31 33 34 58 62 63 64
+loopWhile (293) 59 60 61
+loopFor (294) 62 63 64
+gt (295) 94
+gte (296) 96
+lt (297) 93
+lte (298) 95
+leftOp (299) 99
+rightOp (300) 100
+modulo (301) 110
+ret (302) 58
+equalsOp (303) 80 97
+lSquareBracket (304) 15 78
+rSquareBracket (305) 15 78
+caseT (306) 76
+defaultT (307) 77
+condSwitch (308) 71
+colonT (309) 76 77
+continueT (310) 22
+plusPlus (311) 104 106
+minusMinus (312) 105 107
+"then" (313)
+
+
+Nonterminals, with rules where they appear
+
+$accept (59)
+    on left: 0
+ROOT (60)
+    on left: 1, on right: 0
+PROG (61)
+    on left: 2 3, on right: 1 3
+PROGELEMENT (62)
+    on left: 4 5 6 7 8, on right: 2 3
+FUNTIONDECLARATION (63)
+    on left: 9, on right: 7
+FUNCTIONDEFINITION (64)
+    on left: 10 11, on right: 8
+VARIABLEDECLARATION (65)
+    on left: 12 13 14, on right: 4 24
+ARRAYDECLARATION (66)
+    on left: 15, on right: 5 25
+PARAMETERLIST (67)
+    on left: 16 17 18, on right: 9 10 11 16
+STATEMENTLIST (68)
+    on left: 19 20, on right: 10 20 59 60 62 63 65 66 67 68 69 70 74
+    76 77
+BREAKSTATEMENT (69)
+    on left: 21, on right: 27
+CONTINUESTATEMENT (70)
+    on left: 22, on right: 28
+STATEMENT (71)
+    on left: 23 24 25 26 27 28 29 30 31 32 33 34, on right: 19 20
+ASSIGNMENT (72)
+    on left: 35 36 37 38 39 40 41 42 43 44 45 46 47, on right: 26 35
+    62 63 64
+ENUMERATIONSPECIFIER (73)
+    on left: 48, on right: 6 30
+ENUMERATORLIST (74)
+    on left: 49 50 51, on right: 48 51
+ENUMERATOR (75)
+    on left: 52 53, on right: 49 50 51
+FUNCTIONCALL (76)
+    on left: 54, on right: 33 118
+CONCRETEPARAMETERLIST (77)
+    on left: 55 56 57, on right: 54 55
+RETURNSTATEMENT (78)
+    on left: 58, on right: 32
+LOOP (79)
+    on left: 59 60 61 62 63 64, on right: 23
+CONDITIONAL (80)
+    on left: 65 66 67 68 69 70 71, on right: 29
+CASELIST (81)
+    on left: 72 73 74 75, on right: 71 73 74
+CASE (82)
+    on left: 76 77, on right: 72 73
+SUBSCRIPT (83)
+    on left: 78, on right: 36 117
+EQUALITYEXPRESSION (84)
+    on left: 79 80 81, on right: 80 81 82 83
+ANDEXPRESSION (85)
+    on left: 82 83, on right: 83 84 85
+EXCLUSIVEOREXPRESSION (86)
+    on left: 84 85, on right: 85 86 87
+INCLUSIVEOREXPRESSION (87)
+    on left: 86 87, on right: 87 88 89
+LOGICALANDEXPRESSION (88)
+    on left: 88 89, on right: 89 90 91
+LOGICALOREXPRESSION (89)
+    on left: 90 91, on right: 13 15 34 36 47 52 55 56 58 59 60 61 62
+    63 64 65 66 67 68 69 70 71 76 78 91
+RELATIONALEXPRESSION (90)
+    on left: 92 93 94 95 96 97, on right: 79 80 81 93 94 95 96 97 115
+SHIFTEXPRESSION (91)
+    on left: 98 99 100, on right: 92 93 94 95 96 97 99 100
+ADDITIVEEXPRESSION (92)
+    on left: 101 102 103, on right: 98 99 100 102 103
+MULTIPLICATIVEEXPRESSION (93)
+    on left: 104 105 106 107 108 109 110 111, on right: 101 102 103
+    108 109 110
+UNARYMINUS (94)
+    on left: 112 113, on right: 119
+FACTOR (95)
+    on left: 114 115 116 117 118 119, on right: 37 38 39 40 41 42 43
+    44 45 46 104 105 106 107 108 109 110 111 112 113
+
+
+State 0
+
+    0 $accept: . ROOT $end
+
+    enumT       shift, and go to state 1
+    identifier  shift, and go to state 2
+    dataType    shift, and go to state 3
+
+    ROOT                  go to state 4
+    PROG                  go to state 5
+    PROGELEMENT           go to state 6
+    FUNTIONDECLARATION    go to state 7
+    FUNCTIONDEFINITION    go to state 8
+    VARIABLEDECLARATION   go to state 9
+    ARRAYDECLARATION      go to state 10
+    ENUMERATIONSPECIFIER  go to state 11
+
+
+State 1
+
+   48 ENUMERATIONSPECIFIER: enumT . identifier lCurlyBracket ENUMERATORLIST rCurlyBracket
+
+    identifier  shift, and go to state 12
+
+
+State 2
+
+   14 VARIABLEDECLARATION: identifier . identifier
+
+    identifier  shift, and go to state 13
+
+
+State 3
+
+    9 FUNTIONDECLARATION: dataType . identifier lBracket PARAMETERLIST rBracket
+   10 FUNCTIONDEFINITION: dataType . identifier lBracket PARAMETERLIST rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   11                   | dataType . identifier lBracket PARAMETERLIST rBracket lCurlyBracket rCurlyBracket
+   12 VARIABLEDECLARATION: dataType . identifier
+   13                    | dataType . identifier assign LOGICALOREXPRESSION
+   15 ARRAYDECLARATION: dataType . identifier lSquareBracket LOGICALOREXPRESSION rSquareBracket
+
+    identifier  shift, and go to state 14
+
+
+State 4
+
+    0 $accept: ROOT . $end
+
+    $end  shift, and go to state 15
+
+
+State 5
+
+    1 ROOT: PROG .
+
+    $default  reduce using rule 1 (ROOT)
+
+
+State 6
+
+    2 PROG: PROGELEMENT .
+    3     | PROGELEMENT . PROG
+
+    enumT       shift, and go to state 1
+    identifier  shift, and go to state 2
+    dataType    shift, and go to state 3
+
+    $default  reduce using rule 2 (PROG)
+
+    PROG                  go to state 16
+    PROGELEMENT           go to state 6
+    FUNTIONDECLARATION    go to state 7
+    FUNCTIONDEFINITION    go to state 8
+    VARIABLEDECLARATION   go to state 9
+    ARRAYDECLARATION      go to state 10
+    ENUMERATIONSPECIFIER  go to state 11
+
+
+State 7
+
+    7 PROGELEMENT: FUNTIONDECLARATION . colon
+
+    colon  shift, and go to state 17
+
+
+State 8
+
+    8 PROGELEMENT: FUNCTIONDEFINITION .
+
+    $default  reduce using rule 8 (PROGELEMENT)
+
+
+State 9
+
+    4 PROGELEMENT: VARIABLEDECLARATION . colon
+
+    colon  shift, and go to state 18
+
+
+State 10
+
+    5 PROGELEMENT: ARRAYDECLARATION . colon
+
+    colon  shift, and go to state 19
+
+
+State 11
+
+    6 PROGELEMENT: ENUMERATIONSPECIFIER . colon
+
+    colon  shift, and go to state 20
+
+
+State 12
+
+   48 ENUMERATIONSPECIFIER: enumT identifier . lCurlyBracket ENUMERATORLIST rCurlyBracket
+
+    lCurlyBracket  shift, and go to state 21
+
+
+State 13
+
+   14 VARIABLEDECLARATION: identifier identifier .
+
+    $default  reduce using rule 14 (VARIABLEDECLARATION)
+
+
+State 14
+
+    9 FUNTIONDECLARATION: dataType identifier . lBracket PARAMETERLIST rBracket
+   10 FUNCTIONDEFINITION: dataType identifier . lBracket PARAMETERLIST rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   11                   | dataType identifier . lBracket PARAMETERLIST rBracket lCurlyBracket rCurlyBracket
+   12 VARIABLEDECLARATION: dataType identifier .
+   13                    | dataType identifier . assign LOGICALOREXPRESSION
+   15 ARRAYDECLARATION: dataType identifier . lSquareBracket LOGICALOREXPRESSION rSquareBracket
+
+    assign          shift, and go to state 22
+    lBracket        shift, and go to state 23
+    lSquareBracket  shift, and go to state 24
+
+    $default  reduce using rule 12 (VARIABLEDECLARATION)
+
+
+State 15
+
+    0 $accept: ROOT $end .
+
+    $default  accept
+
+
+State 16
+
+    3 PROG: PROGELEMENT PROG .
+
+    $default  reduce using rule 3 (PROG)
+
+
+State 17
+
+    7 PROGELEMENT: FUNTIONDECLARATION colon .
+
+    $default  reduce using rule 7 (PROGELEMENT)
+
+
+State 18
+
+    4 PROGELEMENT: VARIABLEDECLARATION colon .
+
+    $default  reduce using rule 4 (PROGELEMENT)
+
+
+State 19
+
+    5 PROGELEMENT: ARRAYDECLARATION colon .
+
+    $default  reduce using rule 5 (PROGELEMENT)
+
+
+State 20
+
+    6 PROGELEMENT: ENUMERATIONSPECIFIER colon .
+
+    $default  reduce using rule 6 (PROGELEMENT)
+
+
+State 21
+
+   48 ENUMERATIONSPECIFIER: enumT identifier lCurlyBracket . ENUMERATORLIST rCurlyBracket
+
+    identifier  shift, and go to state 25
+
+    ENUMERATORLIST  go to state 26
+    ENUMERATOR      go to state 27
+
+
+State 22
+
+   13 VARIABLEDECLARATION: dataType identifier assign . LOGICALOREXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 42
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 23
+
+    9 FUNTIONDECLARATION: dataType identifier lBracket . PARAMETERLIST rBracket
+   10 FUNCTIONDEFINITION: dataType identifier lBracket . PARAMETERLIST rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   11                   | dataType identifier lBracket . PARAMETERLIST rBracket lCurlyBracket rCurlyBracket
+
+    dataType  shift, and go to state 49
+
+    $default  reduce using rule 18 (PARAMETERLIST)
+
+    PARAMETERLIST  go to state 50
+
+
+State 24
+
+   15 ARRAYDECLARATION: dataType identifier lSquareBracket . LOGICALOREXPRESSION rSquareBracket
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 51
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 25
+
+   52 ENUMERATOR: identifier . assign LOGICALOREXPRESSION
+   53           | identifier .
+
+    assign  shift, and go to state 52
+
+    $default  reduce using rule 53 (ENUMERATOR)
+
+
+State 26
+
+   48 ENUMERATIONSPECIFIER: enumT identifier lCurlyBracket ENUMERATORLIST . rCurlyBracket
+
+    rCurlyBracket  shift, and go to state 53
+
+
+State 27
+
+   49 ENUMERATORLIST: ENUMERATOR .
+   50               | ENUMERATOR . comma
+   51               | ENUMERATOR . comma ENUMERATORLIST
+
+    comma  shift, and go to state 54
+
+    $default  reduce using rule 49 (ENUMERATORLIST)
+
+
+State 28
+
+  112 UNARYMINUS: minus . FACTOR
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+
+    FUNCTIONCALL  go to state 35
+    SUBSCRIPT     go to state 36
+    UNARYMINUS    go to state 47
+    FACTOR        go to state 55
+
+
+State 29
+
+  115 FACTOR: lBracket . RELATIONALEXPRESSION rBracket
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    RELATIONALEXPRESSION      go to state 56
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 30
+
+  113 UNARYMINUS: logicalNotOp . FACTOR
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+
+    FUNCTIONCALL  go to state 35
+    SUBSCRIPT     go to state 36
+    UNARYMINUS    go to state 47
+    FACTOR        go to state 57
+
+
+State 31
+
+  114 FACTOR: number .
+
+    $default  reduce using rule 114 (FACTOR)
+
+
+State 32
+
+   54 FUNCTIONCALL: identifier . lBracket CONCRETEPARAMETERLIST rBracket
+   78 SUBSCRIPT: identifier . lSquareBracket LOGICALOREXPRESSION rSquareBracket
+  116 FACTOR: identifier .
+
+    lBracket        shift, and go to state 58
+    lSquareBracket  shift, and go to state 59
+
+    $default  reduce using rule 116 (FACTOR)
+
+
+State 33
+
+  106 MULTIPLICATIVEEXPRESSION: plusPlus . FACTOR
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+
+    FUNCTIONCALL  go to state 35
+    SUBSCRIPT     go to state 36
+    UNARYMINUS    go to state 47
+    FACTOR        go to state 60
+
+
+State 34
+
+  107 MULTIPLICATIVEEXPRESSION: minusMinus . FACTOR
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+
+    FUNCTIONCALL  go to state 35
+    SUBSCRIPT     go to state 36
+    UNARYMINUS    go to state 47
+    FACTOR        go to state 61
+
+
+State 35
+
+  118 FACTOR: FUNCTIONCALL .
+
+    $default  reduce using rule 118 (FACTOR)
+
+
+State 36
+
+  117 FACTOR: SUBSCRIPT .
+
+    $default  reduce using rule 117 (FACTOR)
+
+
+State 37
+
+   80 EQUALITYEXPRESSION: EQUALITYEXPRESSION . equalsOp RELATIONALEXPRESSION
+   81                   | EQUALITYEXPRESSION . notEqualOp RELATIONALEXPRESSION
+   82 ANDEXPRESSION: EQUALITYEXPRESSION .
+
+    notEqualOp  shift, and go to state 62
+    equalsOp    shift, and go to state 63
+
+    $default  reduce using rule 82 (ANDEXPRESSION)
+
+
+State 38
+
+   83 ANDEXPRESSION: ANDEXPRESSION . bitWiseAndOp EQUALITYEXPRESSION
+   84 EXCLUSIVEOREXPRESSION: ANDEXPRESSION .
+
+    bitWiseAndOp  shift, and go to state 64
+
+    $default  reduce using rule 84 (EXCLUSIVEOREXPRESSION)
+
+
+State 39
+
+   85 EXCLUSIVEOREXPRESSION: EXCLUSIVEOREXPRESSION . bitWiseEorOp ANDEXPRESSION
+   86 INCLUSIVEOREXPRESSION: EXCLUSIVEOREXPRESSION .
+
+    bitWiseEorOp  shift, and go to state 65
+
+    $default  reduce using rule 86 (INCLUSIVEOREXPRESSION)
+
+
+State 40
+
+   87 INCLUSIVEOREXPRESSION: INCLUSIVEOREXPRESSION . bitWiseIorOp EXCLUSIVEOREXPRESSION
+   88 LOGICALANDEXPRESSION: INCLUSIVEOREXPRESSION .
+
+    bitWiseIorOp  shift, and go to state 66
+
+    $default  reduce using rule 88 (LOGICALANDEXPRESSION)
+
+
+State 41
+
+   89 LOGICALANDEXPRESSION: LOGICALANDEXPRESSION . logicalAndOp INCLUSIVEOREXPRESSION
+   90 LOGICALOREXPRESSION: LOGICALANDEXPRESSION .
+
+    logicalAndOp  shift, and go to state 67
+
+    $default  reduce using rule 90 (LOGICALOREXPRESSION)
+
+
+State 42
+
+   13 VARIABLEDECLARATION: dataType identifier assign LOGICALOREXPRESSION .
+   91 LOGICALOREXPRESSION: LOGICALOREXPRESSION . logicalOrOp LOGICALANDEXPRESSION
+
+    logicalOrOp  shift, and go to state 68
+
+    $default  reduce using rule 13 (VARIABLEDECLARATION)
+
+
+State 43
+
+   79 EQUALITYEXPRESSION: RELATIONALEXPRESSION .
+   93 RELATIONALEXPRESSION: RELATIONALEXPRESSION . lt SHIFTEXPRESSION
+   94                     | RELATIONALEXPRESSION . gt SHIFTEXPRESSION
+   95                     | RELATIONALEXPRESSION . lte SHIFTEXPRESSION
+   96                     | RELATIONALEXPRESSION . gte SHIFTEXPRESSION
+   97                     | RELATIONALEXPRESSION . equalsOp SHIFTEXPRESSION
+
+    gt        shift, and go to state 69
+    gte       shift, and go to state 70
+    lt        shift, and go to state 71
+    lte       shift, and go to state 72
+    equalsOp  shift, and go to state 73
+
+    equalsOp  [reduce using rule 79 (EQUALITYEXPRESSION)]
+    $default  reduce using rule 79 (EQUALITYEXPRESSION)
+
+
+State 44
+
+   92 RELATIONALEXPRESSION: SHIFTEXPRESSION .
+   99 SHIFTEXPRESSION: SHIFTEXPRESSION . leftOp ADDITIVEEXPRESSION
+  100                | SHIFTEXPRESSION . rightOp ADDITIVEEXPRESSION
+
+    leftOp   shift, and go to state 74
+    rightOp  shift, and go to state 75
+
+    $default  reduce using rule 92 (RELATIONALEXPRESSION)
+
+
+State 45
+
+   98 SHIFTEXPRESSION: ADDITIVEEXPRESSION .
+  102 ADDITIVEEXPRESSION: ADDITIVEEXPRESSION . plus MULTIPLICATIVEEXPRESSION
+  103                   | ADDITIVEEXPRESSION . minus MULTIPLICATIVEEXPRESSION
+
+    plus   shift, and go to state 76
+    minus  shift, and go to state 77
+
+    $default  reduce using rule 98 (SHIFTEXPRESSION)
+
+
+State 46
+
+  101 ADDITIVEEXPRESSION: MULTIPLICATIVEEXPRESSION .
+  108 MULTIPLICATIVEEXPRESSION: MULTIPLICATIVEEXPRESSION . times FACTOR
+  109                         | MULTIPLICATIVEEXPRESSION . divide FACTOR
+  110                         | MULTIPLICATIVEEXPRESSION . modulo FACTOR
+
+    times   shift, and go to state 78
+    divide  shift, and go to state 79
+    modulo  shift, and go to state 80
+
+    $default  reduce using rule 101 (ADDITIVEEXPRESSION)
+
+
+State 47
+
+  119 FACTOR: UNARYMINUS .
+
+    $default  reduce using rule 119 (FACTOR)
+
+
+State 48
+
+  104 MULTIPLICATIVEEXPRESSION: FACTOR . plusPlus
+  105                         | FACTOR . minusMinus
+  111                         | FACTOR .
+
+    plusPlus    shift, and go to state 81
+    minusMinus  shift, and go to state 82
+
+    $default  reduce using rule 111 (MULTIPLICATIVEEXPRESSION)
+
+
+State 49
+
+   16 PARAMETERLIST: dataType . identifier comma PARAMETERLIST
+   17              | dataType . identifier
+
+    identifier  shift, and go to state 83
+
+
+State 50
+
+    9 FUNTIONDECLARATION: dataType identifier lBracket PARAMETERLIST . rBracket
+   10 FUNCTIONDEFINITION: dataType identifier lBracket PARAMETERLIST . rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   11                   | dataType identifier lBracket PARAMETERLIST . rBracket lCurlyBracket rCurlyBracket
+
+    rBracket  shift, and go to state 84
+
+
+State 51
+
+   15 ARRAYDECLARATION: dataType identifier lSquareBracket LOGICALOREXPRESSION . rSquareBracket
+   91 LOGICALOREXPRESSION: LOGICALOREXPRESSION . logicalOrOp LOGICALANDEXPRESSION
+
+    logicalOrOp     shift, and go to state 68
+    rSquareBracket  shift, and go to state 85
+
+
+State 52
+
+   52 ENUMERATOR: identifier assign . LOGICALOREXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 86
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 53
+
+   48 ENUMERATIONSPECIFIER: enumT identifier lCurlyBracket ENUMERATORLIST rCurlyBracket .
+
+    $default  reduce using rule 48 (ENUMERATIONSPECIFIER)
+
+
+State 54
+
+   50 ENUMERATORLIST: ENUMERATOR comma .
+   51               | ENUMERATOR comma . ENUMERATORLIST
+
+    identifier  shift, and go to state 25
+
+    $default  reduce using rule 50 (ENUMERATORLIST)
+
+    ENUMERATORLIST  go to state 87
+    ENUMERATOR      go to state 27
+
+
+State 55
+
+  112 UNARYMINUS: minus FACTOR .
+
+    $default  reduce using rule 112 (UNARYMINUS)
+
+
+State 56
+
+   93 RELATIONALEXPRESSION: RELATIONALEXPRESSION . lt SHIFTEXPRESSION
+   94                     | RELATIONALEXPRESSION . gt SHIFTEXPRESSION
+   95                     | RELATIONALEXPRESSION . lte SHIFTEXPRESSION
+   96                     | RELATIONALEXPRESSION . gte SHIFTEXPRESSION
+   97                     | RELATIONALEXPRESSION . equalsOp SHIFTEXPRESSION
+  115 FACTOR: lBracket RELATIONALEXPRESSION . rBracket
+
+    rBracket  shift, and go to state 88
+    gt        shift, and go to state 69
+    gte       shift, and go to state 70
+    lt        shift, and go to state 71
+    lte       shift, and go to state 72
+    equalsOp  shift, and go to state 73
+
+
+State 57
+
+  113 UNARYMINUS: logicalNotOp FACTOR .
+
+    $default  reduce using rule 113 (UNARYMINUS)
+
+
+State 58
+
+   54 FUNCTIONCALL: identifier lBracket . CONCRETEPARAMETERLIST rBracket
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    $default  reduce using rule 57 (CONCRETEPARAMETERLIST)
+
+    FUNCTIONCALL              go to state 35
+    CONCRETEPARAMETERLIST     go to state 89
+    SUBSCRIPT                 go to state 36
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 90
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 59
+
+   78 SUBSCRIPT: identifier lSquareBracket . LOGICALOREXPRESSION rSquareBracket
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 91
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 60
+
+  106 MULTIPLICATIVEEXPRESSION: plusPlus FACTOR .
+
+    $default  reduce using rule 106 (MULTIPLICATIVEEXPRESSION)
+
+
+State 61
+
+  107 MULTIPLICATIVEEXPRESSION: minusMinus FACTOR .
+
+    $default  reduce using rule 107 (MULTIPLICATIVEEXPRESSION)
+
+
+State 62
+
+   81 EQUALITYEXPRESSION: EQUALITYEXPRESSION notEqualOp . RELATIONALEXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    RELATIONALEXPRESSION      go to state 92
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 63
+
+   80 EQUALITYEXPRESSION: EQUALITYEXPRESSION equalsOp . RELATIONALEXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    RELATIONALEXPRESSION      go to state 93
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 64
+
+   83 ANDEXPRESSION: ANDEXPRESSION bitWiseAndOp . EQUALITYEXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    EQUALITYEXPRESSION        go to state 94
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 65
+
+   85 EXCLUSIVEOREXPRESSION: EXCLUSIVEOREXPRESSION bitWiseEorOp . ANDEXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 95
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 66
+
+   87 INCLUSIVEOREXPRESSION: INCLUSIVEOREXPRESSION bitWiseIorOp . EXCLUSIVEOREXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 96
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 67
+
+   89 LOGICALANDEXPRESSION: LOGICALANDEXPRESSION logicalAndOp . INCLUSIVEOREXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 97
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 68
+
+   91 LOGICALOREXPRESSION: LOGICALOREXPRESSION logicalOrOp . LOGICALANDEXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 98
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 69
+
+   94 RELATIONALEXPRESSION: RELATIONALEXPRESSION gt . SHIFTEXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    SHIFTEXPRESSION           go to state 99
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 70
+
+   96 RELATIONALEXPRESSION: RELATIONALEXPRESSION gte . SHIFTEXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    SHIFTEXPRESSION           go to state 100
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 71
+
+   93 RELATIONALEXPRESSION: RELATIONALEXPRESSION lt . SHIFTEXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    SHIFTEXPRESSION           go to state 101
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 72
+
+   95 RELATIONALEXPRESSION: RELATIONALEXPRESSION lte . SHIFTEXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    SHIFTEXPRESSION           go to state 102
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 73
+
+   97 RELATIONALEXPRESSION: RELATIONALEXPRESSION equalsOp . SHIFTEXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    SHIFTEXPRESSION           go to state 103
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 74
+
+   99 SHIFTEXPRESSION: SHIFTEXPRESSION leftOp . ADDITIVEEXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    ADDITIVEEXPRESSION        go to state 104
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 75
+
+  100 SHIFTEXPRESSION: SHIFTEXPRESSION rightOp . ADDITIVEEXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    ADDITIVEEXPRESSION        go to state 105
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 76
+
+  102 ADDITIVEEXPRESSION: ADDITIVEEXPRESSION plus . MULTIPLICATIVEEXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    MULTIPLICATIVEEXPRESSION  go to state 106
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 77
+
+  103 ADDITIVEEXPRESSION: ADDITIVEEXPRESSION minus . MULTIPLICATIVEEXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    MULTIPLICATIVEEXPRESSION  go to state 107
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 78
+
+  108 MULTIPLICATIVEEXPRESSION: MULTIPLICATIVEEXPRESSION times . FACTOR
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+
+    FUNCTIONCALL  go to state 35
+    SUBSCRIPT     go to state 36
+    UNARYMINUS    go to state 47
+    FACTOR        go to state 108
+
+
+State 79
+
+  109 MULTIPLICATIVEEXPRESSION: MULTIPLICATIVEEXPRESSION divide . FACTOR
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+
+    FUNCTIONCALL  go to state 35
+    SUBSCRIPT     go to state 36
+    UNARYMINUS    go to state 47
+    FACTOR        go to state 109
+
+
+State 80
+
+  110 MULTIPLICATIVEEXPRESSION: MULTIPLICATIVEEXPRESSION modulo . FACTOR
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+
+    FUNCTIONCALL  go to state 35
+    SUBSCRIPT     go to state 36
+    UNARYMINUS    go to state 47
+    FACTOR        go to state 110
+
+
+State 81
+
+  104 MULTIPLICATIVEEXPRESSION: FACTOR plusPlus .
+
+    $default  reduce using rule 104 (MULTIPLICATIVEEXPRESSION)
+
+
+State 82
+
+  105 MULTIPLICATIVEEXPRESSION: FACTOR minusMinus .
+
+    $default  reduce using rule 105 (MULTIPLICATIVEEXPRESSION)
+
+
+State 83
+
+   16 PARAMETERLIST: dataType identifier . comma PARAMETERLIST
+   17              | dataType identifier .
+
+    comma  shift, and go to state 111
+
+    $default  reduce using rule 17 (PARAMETERLIST)
+
+
+State 84
+
+    9 FUNTIONDECLARATION: dataType identifier lBracket PARAMETERLIST rBracket .
+   10 FUNCTIONDEFINITION: dataType identifier lBracket PARAMETERLIST rBracket . lCurlyBracket STATEMENTLIST rCurlyBracket
+   11                   | dataType identifier lBracket PARAMETERLIST rBracket . lCurlyBracket rCurlyBracket
+
+    lCurlyBracket  shift, and go to state 112
+
+    $default  reduce using rule 9 (FUNTIONDECLARATION)
+
+
+State 85
+
+   15 ARRAYDECLARATION: dataType identifier lSquareBracket LOGICALOREXPRESSION rSquareBracket .
+
+    $default  reduce using rule 15 (ARRAYDECLARATION)
+
+
+State 86
+
+   52 ENUMERATOR: identifier assign LOGICALOREXPRESSION .
+   91 LOGICALOREXPRESSION: LOGICALOREXPRESSION . logicalOrOp LOGICALANDEXPRESSION
+
+    logicalOrOp  shift, and go to state 68
+
+    $default  reduce using rule 52 (ENUMERATOR)
+
+
+State 87
+
+   51 ENUMERATORLIST: ENUMERATOR comma ENUMERATORLIST .
+
+    $default  reduce using rule 51 (ENUMERATORLIST)
+
+
+State 88
+
+  115 FACTOR: lBracket RELATIONALEXPRESSION rBracket .
+
+    $default  reduce using rule 115 (FACTOR)
+
+
+State 89
+
+   54 FUNCTIONCALL: identifier lBracket CONCRETEPARAMETERLIST . rBracket
+
+    rBracket  shift, and go to state 113
+
+
+State 90
+
+   55 CONCRETEPARAMETERLIST: LOGICALOREXPRESSION . comma CONCRETEPARAMETERLIST
+   56                      | LOGICALOREXPRESSION .
+   91 LOGICALOREXPRESSION: LOGICALOREXPRESSION . logicalOrOp LOGICALANDEXPRESSION
+
+    logicalOrOp  shift, and go to state 68
+    comma        shift, and go to state 114
+
+    $default  reduce using rule 56 (CONCRETEPARAMETERLIST)
+
+
+State 91
+
+   78 SUBSCRIPT: identifier lSquareBracket LOGICALOREXPRESSION . rSquareBracket
+   91 LOGICALOREXPRESSION: LOGICALOREXPRESSION . logicalOrOp LOGICALANDEXPRESSION
+
+    logicalOrOp     shift, and go to state 68
+    rSquareBracket  shift, and go to state 115
+
+
+State 92
+
+   81 EQUALITYEXPRESSION: EQUALITYEXPRESSION notEqualOp RELATIONALEXPRESSION .
+   93 RELATIONALEXPRESSION: RELATIONALEXPRESSION . lt SHIFTEXPRESSION
+   94                     | RELATIONALEXPRESSION . gt SHIFTEXPRESSION
+   95                     | RELATIONALEXPRESSION . lte SHIFTEXPRESSION
+   96                     | RELATIONALEXPRESSION . gte SHIFTEXPRESSION
+   97                     | RELATIONALEXPRESSION . equalsOp SHIFTEXPRESSION
+
+    gt        shift, and go to state 69
+    gte       shift, and go to state 70
+    lt        shift, and go to state 71
+    lte       shift, and go to state 72
+    equalsOp  shift, and go to state 73
+
+    equalsOp  [reduce using rule 81 (EQUALITYEXPRESSION)]
+    $default  reduce using rule 81 (EQUALITYEXPRESSION)
+
+
+State 93
+
+   80 EQUALITYEXPRESSION: EQUALITYEXPRESSION equalsOp RELATIONALEXPRESSION .
+   93 RELATIONALEXPRESSION: RELATIONALEXPRESSION . lt SHIFTEXPRESSION
+   94                     | RELATIONALEXPRESSION . gt SHIFTEXPRESSION
+   95                     | RELATIONALEXPRESSION . lte SHIFTEXPRESSION
+   96                     | RELATIONALEXPRESSION . gte SHIFTEXPRESSION
+   97                     | RELATIONALEXPRESSION . equalsOp SHIFTEXPRESSION
+
+    gt        shift, and go to state 69
+    gte       shift, and go to state 70
+    lt        shift, and go to state 71
+    lte       shift, and go to state 72
+    equalsOp  shift, and go to state 73
+
+    equalsOp  [reduce using rule 80 (EQUALITYEXPRESSION)]
+    $default  reduce using rule 80 (EQUALITYEXPRESSION)
+
+
+State 94
+
+   80 EQUALITYEXPRESSION: EQUALITYEXPRESSION . equalsOp RELATIONALEXPRESSION
+   81                   | EQUALITYEXPRESSION . notEqualOp RELATIONALEXPRESSION
+   83 ANDEXPRESSION: ANDEXPRESSION bitWiseAndOp EQUALITYEXPRESSION .
+
+    notEqualOp  shift, and go to state 62
+    equalsOp    shift, and go to state 63
+
+    $default  reduce using rule 83 (ANDEXPRESSION)
+
+
+State 95
+
+   83 ANDEXPRESSION: ANDEXPRESSION . bitWiseAndOp EQUALITYEXPRESSION
+   85 EXCLUSIVEOREXPRESSION: EXCLUSIVEOREXPRESSION bitWiseEorOp ANDEXPRESSION .
+
+    bitWiseAndOp  shift, and go to state 64
+
+    $default  reduce using rule 85 (EXCLUSIVEOREXPRESSION)
+
+
+State 96
+
+   85 EXCLUSIVEOREXPRESSION: EXCLUSIVEOREXPRESSION . bitWiseEorOp ANDEXPRESSION
+   87 INCLUSIVEOREXPRESSION: INCLUSIVEOREXPRESSION bitWiseIorOp EXCLUSIVEOREXPRESSION .
+
+    bitWiseEorOp  shift, and go to state 65
+
+    $default  reduce using rule 87 (INCLUSIVEOREXPRESSION)
+
+
+State 97
+
+   87 INCLUSIVEOREXPRESSION: INCLUSIVEOREXPRESSION . bitWiseIorOp EXCLUSIVEOREXPRESSION
+   89 LOGICALANDEXPRESSION: LOGICALANDEXPRESSION logicalAndOp INCLUSIVEOREXPRESSION .
+
+    bitWiseIorOp  shift, and go to state 66
+
+    $default  reduce using rule 89 (LOGICALANDEXPRESSION)
+
+
+State 98
+
+   89 LOGICALANDEXPRESSION: LOGICALANDEXPRESSION . logicalAndOp INCLUSIVEOREXPRESSION
+   91 LOGICALOREXPRESSION: LOGICALOREXPRESSION logicalOrOp LOGICALANDEXPRESSION .
+
+    logicalAndOp  shift, and go to state 67
+
+    $default  reduce using rule 91 (LOGICALOREXPRESSION)
+
+
+State 99
+
+   94 RELATIONALEXPRESSION: RELATIONALEXPRESSION gt SHIFTEXPRESSION .
+   99 SHIFTEXPRESSION: SHIFTEXPRESSION . leftOp ADDITIVEEXPRESSION
+  100                | SHIFTEXPRESSION . rightOp ADDITIVEEXPRESSION
+
+    leftOp   shift, and go to state 74
+    rightOp  shift, and go to state 75
+
+    $default  reduce using rule 94 (RELATIONALEXPRESSION)
+
+
+State 100
+
+   96 RELATIONALEXPRESSION: RELATIONALEXPRESSION gte SHIFTEXPRESSION .
+   99 SHIFTEXPRESSION: SHIFTEXPRESSION . leftOp ADDITIVEEXPRESSION
+  100                | SHIFTEXPRESSION . rightOp ADDITIVEEXPRESSION
+
+    leftOp   shift, and go to state 74
+    rightOp  shift, and go to state 75
+
+    $default  reduce using rule 96 (RELATIONALEXPRESSION)
+
+
+State 101
+
+   93 RELATIONALEXPRESSION: RELATIONALEXPRESSION lt SHIFTEXPRESSION .
+   99 SHIFTEXPRESSION: SHIFTEXPRESSION . leftOp ADDITIVEEXPRESSION
+  100                | SHIFTEXPRESSION . rightOp ADDITIVEEXPRESSION
+
+    leftOp   shift, and go to state 74
+    rightOp  shift, and go to state 75
+
+    $default  reduce using rule 93 (RELATIONALEXPRESSION)
+
+
+State 102
+
+   95 RELATIONALEXPRESSION: RELATIONALEXPRESSION lte SHIFTEXPRESSION .
+   99 SHIFTEXPRESSION: SHIFTEXPRESSION . leftOp ADDITIVEEXPRESSION
+  100                | SHIFTEXPRESSION . rightOp ADDITIVEEXPRESSION
+
+    leftOp   shift, and go to state 74
+    rightOp  shift, and go to state 75
+
+    $default  reduce using rule 95 (RELATIONALEXPRESSION)
+
+
+State 103
+
+   97 RELATIONALEXPRESSION: RELATIONALEXPRESSION equalsOp SHIFTEXPRESSION .
+   99 SHIFTEXPRESSION: SHIFTEXPRESSION . leftOp ADDITIVEEXPRESSION
+  100                | SHIFTEXPRESSION . rightOp ADDITIVEEXPRESSION
+
+    leftOp   shift, and go to state 74
+    rightOp  shift, and go to state 75
+
+    $default  reduce using rule 97 (RELATIONALEXPRESSION)
+
+
+State 104
+
+   99 SHIFTEXPRESSION: SHIFTEXPRESSION leftOp ADDITIVEEXPRESSION .
+  102 ADDITIVEEXPRESSION: ADDITIVEEXPRESSION . plus MULTIPLICATIVEEXPRESSION
+  103                   | ADDITIVEEXPRESSION . minus MULTIPLICATIVEEXPRESSION
+
+    plus   shift, and go to state 76
+    minus  shift, and go to state 77
+
+    $default  reduce using rule 99 (SHIFTEXPRESSION)
+
+
+State 105
+
+  100 SHIFTEXPRESSION: SHIFTEXPRESSION rightOp ADDITIVEEXPRESSION .
+  102 ADDITIVEEXPRESSION: ADDITIVEEXPRESSION . plus MULTIPLICATIVEEXPRESSION
+  103                   | ADDITIVEEXPRESSION . minus MULTIPLICATIVEEXPRESSION
+
+    plus   shift, and go to state 76
+    minus  shift, and go to state 77
+
+    $default  reduce using rule 100 (SHIFTEXPRESSION)
+
+
+State 106
+
+  102 ADDITIVEEXPRESSION: ADDITIVEEXPRESSION plus MULTIPLICATIVEEXPRESSION .
+  108 MULTIPLICATIVEEXPRESSION: MULTIPLICATIVEEXPRESSION . times FACTOR
+  109                         | MULTIPLICATIVEEXPRESSION . divide FACTOR
+  110                         | MULTIPLICATIVEEXPRESSION . modulo FACTOR
+
+    times   shift, and go to state 78
+    divide  shift, and go to state 79
+    modulo  shift, and go to state 80
+
+    $default  reduce using rule 102 (ADDITIVEEXPRESSION)
+
+
+State 107
+
+  103 ADDITIVEEXPRESSION: ADDITIVEEXPRESSION minus MULTIPLICATIVEEXPRESSION .
+  108 MULTIPLICATIVEEXPRESSION: MULTIPLICATIVEEXPRESSION . times FACTOR
+  109                         | MULTIPLICATIVEEXPRESSION . divide FACTOR
+  110                         | MULTIPLICATIVEEXPRESSION . modulo FACTOR
+
+    times   shift, and go to state 78
+    divide  shift, and go to state 79
+    modulo  shift, and go to state 80
+
+    $default  reduce using rule 103 (ADDITIVEEXPRESSION)
+
+
+State 108
+
+  108 MULTIPLICATIVEEXPRESSION: MULTIPLICATIVEEXPRESSION times FACTOR .
+
+    $default  reduce using rule 108 (MULTIPLICATIVEEXPRESSION)
+
+
+State 109
+
+  109 MULTIPLICATIVEEXPRESSION: MULTIPLICATIVEEXPRESSION divide FACTOR .
+
+    $default  reduce using rule 109 (MULTIPLICATIVEEXPRESSION)
+
+
+State 110
+
+  110 MULTIPLICATIVEEXPRESSION: MULTIPLICATIVEEXPRESSION modulo FACTOR .
+
+    $default  reduce using rule 110 (MULTIPLICATIVEEXPRESSION)
+
+
+State 111
+
+   16 PARAMETERLIST: dataType identifier comma . PARAMETERLIST
+
+    dataType  shift, and go to state 49
+
+    $default  reduce using rule 18 (PARAMETERLIST)
+
+    PARAMETERLIST  go to state 116
+
+
+State 112
+
+   10 FUNCTIONDEFINITION: dataType identifier lBracket PARAMETERLIST rBracket lCurlyBracket . STATEMENTLIST rCurlyBracket
+   11                   | dataType identifier lBracket PARAMETERLIST rBracket lCurlyBracket . rCurlyBracket
+
+    minus          shift, and go to state 28
+    condIf         shift, and go to state 117
+    lBracket       shift, and go to state 29
+    rCurlyBracket  shift, and go to state 118
+    breakT         shift, and go to state 119
+    enumT          shift, and go to state 1
+    logicalNotOp   shift, and go to state 30
+    number         shift, and go to state 31
+    identifier     shift, and go to state 120
+    dataType       shift, and go to state 121
+    colon          shift, and go to state 122
+    loopWhile      shift, and go to state 123
+    loopFor        shift, and go to state 124
+    ret            shift, and go to state 125
+    condSwitch     shift, and go to state 126
+    continueT      shift, and go to state 127
+    plusPlus       shift, and go to state 33
+    minusMinus     shift, and go to state 34
+
+    VARIABLEDECLARATION       go to state 128
+    ARRAYDECLARATION          go to state 129
+    STATEMENTLIST             go to state 130
+    BREAKSTATEMENT            go to state 131
+    CONTINUESTATEMENT         go to state 132
+    STATEMENT                 go to state 133
+    ASSIGNMENT                go to state 134
+    ENUMERATIONSPECIFIER      go to state 135
+    FUNCTIONCALL              go to state 136
+    RETURNSTATEMENT           go to state 137
+    LOOP                      go to state 138
+    CONDITIONAL               go to state 139
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 141
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 113
+
+   54 FUNCTIONCALL: identifier lBracket CONCRETEPARAMETERLIST rBracket .
+
+    $default  reduce using rule 54 (FUNCTIONCALL)
+
+
+State 114
+
+   55 CONCRETEPARAMETERLIST: LOGICALOREXPRESSION comma . CONCRETEPARAMETERLIST
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    $default  reduce using rule 57 (CONCRETEPARAMETERLIST)
+
+    FUNCTIONCALL              go to state 35
+    CONCRETEPARAMETERLIST     go to state 143
+    SUBSCRIPT                 go to state 36
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 90
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 115
+
+   78 SUBSCRIPT: identifier lSquareBracket LOGICALOREXPRESSION rSquareBracket .
+
+    $default  reduce using rule 78 (SUBSCRIPT)
+
+
+State 116
+
+   16 PARAMETERLIST: dataType identifier comma PARAMETERLIST .
+
+    $default  reduce using rule 16 (PARAMETERLIST)
+
+
+State 117
+
+   65 CONDITIONAL: condIf . lBracket LOGICALOREXPRESSION rBracket STATEMENTLIST
+   66            | condIf . lBracket LOGICALOREXPRESSION rBracket STATEMENTLIST condElse STATEMENTLIST
+   67            | condIf . lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket condElse STATEMENTLIST
+   68            | condIf . lBracket LOGICALOREXPRESSION rBracket STATEMENTLIST condElse lCurlyBracket STATEMENTLIST rCurlyBracket
+   69            | condIf . lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   70            | condIf . lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket condElse lCurlyBracket STATEMENTLIST rCurlyBracket
+
+    lBracket  shift, and go to state 144
+
+
+State 118
+
+   11 FUNCTIONDEFINITION: dataType identifier lBracket PARAMETERLIST rBracket lCurlyBracket rCurlyBracket .
+
+    $default  reduce using rule 11 (FUNCTIONDEFINITION)
+
+
+State 119
+
+   21 BREAKSTATEMENT: breakT .
+
+    $default  reduce using rule 21 (BREAKSTATEMENT)
+
+
+State 120
+
+   14 VARIABLEDECLARATION: identifier . identifier
+   35 ASSIGNMENT: identifier . assign ASSIGNMENT
+   54 FUNCTIONCALL: identifier . lBracket CONCRETEPARAMETERLIST rBracket
+   78 SUBSCRIPT: identifier . lSquareBracket LOGICALOREXPRESSION rSquareBracket
+  116 FACTOR: identifier .
+
+    assign          shift, and go to state 145
+    lBracket        shift, and go to state 58
+    identifier      shift, and go to state 13
+    lSquareBracket  shift, and go to state 59
+
+    $default  reduce using rule 116 (FACTOR)
+
+
+State 121
+
+   12 VARIABLEDECLARATION: dataType . identifier
+   13                    | dataType . identifier assign LOGICALOREXPRESSION
+   15 ARRAYDECLARATION: dataType . identifier lSquareBracket LOGICALOREXPRESSION rSquareBracket
+
+    identifier  shift, and go to state 146
+
+
+State 122
+
+   31 STATEMENT: colon .
+
+    $default  reduce using rule 31 (STATEMENT)
+
+
+State 123
+
+   59 LOOP: loopWhile . lBracket LOGICALOREXPRESSION rBracket STATEMENTLIST
+   60     | loopWhile . lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   61     | loopWhile . lBracket LOGICALOREXPRESSION rBracket lCurlyBracket rCurlyBracket
+
+    lBracket  shift, and go to state 147
+
+
+State 124
+
+   62 LOOP: loopFor . lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket STATEMENTLIST
+   63     | loopFor . lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   64     | loopFor . lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket lCurlyBracket rCurlyBracket
+
+    lBracket  shift, and go to state 148
+
+
+State 125
+
+   58 RETURNSTATEMENT: ret . LOGICALOREXPRESSION colon
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 149
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 126
+
+   71 CONDITIONAL: condSwitch . lBracket LOGICALOREXPRESSION rBracket lCurlyBracket CASELIST rCurlyBracket
+
+    lBracket  shift, and go to state 150
+
+
+State 127
+
+   22 CONTINUESTATEMENT: continueT .
+
+    $default  reduce using rule 22 (CONTINUESTATEMENT)
+
+
+State 128
+
+   24 STATEMENT: VARIABLEDECLARATION . colon
+
+    colon  shift, and go to state 151
+
+
+State 129
+
+   25 STATEMENT: ARRAYDECLARATION . colon
+
+    colon  shift, and go to state 152
+
+
+State 130
+
+   10 FUNCTIONDEFINITION: dataType identifier lBracket PARAMETERLIST rBracket lCurlyBracket STATEMENTLIST . rCurlyBracket
+
+    rCurlyBracket  shift, and go to state 153
+
+
+State 131
+
+   27 STATEMENT: BREAKSTATEMENT . colon
+
+    colon  shift, and go to state 154
+
+
+State 132
+
+   28 STATEMENT: CONTINUESTATEMENT . colon
+
+    colon  shift, and go to state 155
+
+
+State 133
+
+   19 STATEMENTLIST: STATEMENT .
+   20              | STATEMENT . STATEMENTLIST
+
+    minus         shift, and go to state 28
+    condIf        shift, and go to state 117
+    lBracket      shift, and go to state 29
+    breakT        shift, and go to state 119
+    enumT         shift, and go to state 1
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 120
+    dataType      shift, and go to state 121
+    colon         shift, and go to state 122
+    loopWhile     shift, and go to state 123
+    loopFor       shift, and go to state 124
+    ret           shift, and go to state 125
+    condSwitch    shift, and go to state 126
+    continueT     shift, and go to state 127
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    minus         [reduce using rule 19 (STATEMENTLIST)]
+    condIf        [reduce using rule 19 (STATEMENTLIST)]
+    lBracket      [reduce using rule 19 (STATEMENTLIST)]
+    breakT        [reduce using rule 19 (STATEMENTLIST)]
+    enumT         [reduce using rule 19 (STATEMENTLIST)]
+    logicalNotOp  [reduce using rule 19 (STATEMENTLIST)]
+    number        [reduce using rule 19 (STATEMENTLIST)]
+    identifier    [reduce using rule 19 (STATEMENTLIST)]
+    dataType      [reduce using rule 19 (STATEMENTLIST)]
+    colon         [reduce using rule 19 (STATEMENTLIST)]
+    loopWhile     [reduce using rule 19 (STATEMENTLIST)]
+    loopFor       [reduce using rule 19 (STATEMENTLIST)]
+    ret           [reduce using rule 19 (STATEMENTLIST)]
+    condSwitch    [reduce using rule 19 (STATEMENTLIST)]
+    continueT     [reduce using rule 19 (STATEMENTLIST)]
+    plusPlus      [reduce using rule 19 (STATEMENTLIST)]
+    minusMinus    [reduce using rule 19 (STATEMENTLIST)]
+    $default      reduce using rule 19 (STATEMENTLIST)
+
+    VARIABLEDECLARATION       go to state 128
+    ARRAYDECLARATION          go to state 129
+    STATEMENTLIST             go to state 156
+    BREAKSTATEMENT            go to state 131
+    CONTINUESTATEMENT         go to state 132
+    STATEMENT                 go to state 133
+    ASSIGNMENT                go to state 134
+    ENUMERATIONSPECIFIER      go to state 135
+    FUNCTIONCALL              go to state 136
+    RETURNSTATEMENT           go to state 137
+    LOOP                      go to state 138
+    CONDITIONAL               go to state 139
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 141
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 134
+
+   26 STATEMENT: ASSIGNMENT . colon
+
+    colon  shift, and go to state 157
+
+
+State 135
+
+   30 STATEMENT: ENUMERATIONSPECIFIER . colon
+
+    colon  shift, and go to state 158
+
+
+State 136
+
+   33 STATEMENT: FUNCTIONCALL . colon
+  118 FACTOR: FUNCTIONCALL .
+
+    colon  shift, and go to state 159
+
+    colon     [reduce using rule 118 (FACTOR)]
+    $default  reduce using rule 118 (FACTOR)
+
+
+State 137
+
+   32 STATEMENT: RETURNSTATEMENT .
+
+    $default  reduce using rule 32 (STATEMENT)
+
+
+State 138
+
+   23 STATEMENT: LOOP .
+
+    $default  reduce using rule 23 (STATEMENT)
+
+
+State 139
+
+   29 STATEMENT: CONDITIONAL .
+
+    $default  reduce using rule 29 (STATEMENT)
+
+
+State 140
+
+   36 ASSIGNMENT: SUBSCRIPT . assign LOGICALOREXPRESSION
+  117 FACTOR: SUBSCRIPT .
+
+    assign  shift, and go to state 160
+
+    $default  reduce using rule 117 (FACTOR)
+
+
+State 141
+
+   34 STATEMENT: LOGICALOREXPRESSION . colon
+   47 ASSIGNMENT: LOGICALOREXPRESSION .
+   91 LOGICALOREXPRESSION: LOGICALOREXPRESSION . logicalOrOp LOGICALANDEXPRESSION
+
+    logicalOrOp  shift, and go to state 68
+    colon        shift, and go to state 161
+
+    colon  [reduce using rule 47 (ASSIGNMENT)]
+
+
+State 142
+
+   37 ASSIGNMENT: FACTOR . plusEquals FACTOR
+   38           | FACTOR . minusEquals FACTOR
+   39           | FACTOR . timesEquals FACTOR
+   40           | FACTOR . divEquals FACTOR
+   41           | FACTOR . modEquals FACTOR
+   42           | FACTOR . andEquals FACTOR
+   43           | FACTOR . orEquals FACTOR
+   44           | FACTOR . xorEquals FACTOR
+   45           | FACTOR . lShiftEquals FACTOR
+   46           | FACTOR . rShiftEquals FACTOR
+  104 MULTIPLICATIVEEXPRESSION: FACTOR . plusPlus
+  105                         | FACTOR . minusMinus
+  111                         | FACTOR .
+
+    plusEquals    shift, and go to state 162
+    minusEquals   shift, and go to state 163
+    timesEquals   shift, and go to state 164
+    divEquals     shift, and go to state 165
+    modEquals     shift, and go to state 166
+    andEquals     shift, and go to state 167
+    orEquals      shift, and go to state 168
+    xorEquals     shift, and go to state 169
+    lShiftEquals  shift, and go to state 170
+    rShiftEquals  shift, and go to state 171
+    plusPlus      shift, and go to state 81
+    minusMinus    shift, and go to state 82
+
+    $default  reduce using rule 111 (MULTIPLICATIVEEXPRESSION)
+
+
+State 143
+
+   55 CONCRETEPARAMETERLIST: LOGICALOREXPRESSION comma CONCRETEPARAMETERLIST .
+
+    $default  reduce using rule 55 (CONCRETEPARAMETERLIST)
+
+
+State 144
+
+   65 CONDITIONAL: condIf lBracket . LOGICALOREXPRESSION rBracket STATEMENTLIST
+   66            | condIf lBracket . LOGICALOREXPRESSION rBracket STATEMENTLIST condElse STATEMENTLIST
+   67            | condIf lBracket . LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket condElse STATEMENTLIST
+   68            | condIf lBracket . LOGICALOREXPRESSION rBracket STATEMENTLIST condElse lCurlyBracket STATEMENTLIST rCurlyBracket
+   69            | condIf lBracket . LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   70            | condIf lBracket . LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket condElse lCurlyBracket STATEMENTLIST rCurlyBracket
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 172
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 145
+
+   35 ASSIGNMENT: identifier assign . ASSIGNMENT
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 173
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    ASSIGNMENT                go to state 174
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 175
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 146
+
+   12 VARIABLEDECLARATION: dataType identifier .
+   13                    | dataType identifier . assign LOGICALOREXPRESSION
+   15 ARRAYDECLARATION: dataType identifier . lSquareBracket LOGICALOREXPRESSION rSquareBracket
+
+    assign          shift, and go to state 22
+    lSquareBracket  shift, and go to state 24
+
+    $default  reduce using rule 12 (VARIABLEDECLARATION)
+
+
+State 147
+
+   59 LOOP: loopWhile lBracket . LOGICALOREXPRESSION rBracket STATEMENTLIST
+   60     | loopWhile lBracket . LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   61     | loopWhile lBracket . LOGICALOREXPRESSION rBracket lCurlyBracket rCurlyBracket
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 176
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 148
+
+   62 LOOP: loopFor lBracket . ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket STATEMENTLIST
+   63     | loopFor lBracket . ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   64     | loopFor lBracket . ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket lCurlyBracket rCurlyBracket
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 173
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    ASSIGNMENT                go to state 177
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 175
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 149
+
+   58 RETURNSTATEMENT: ret LOGICALOREXPRESSION . colon
+   91 LOGICALOREXPRESSION: LOGICALOREXPRESSION . logicalOrOp LOGICALANDEXPRESSION
+
+    logicalOrOp  shift, and go to state 68
+    colon        shift, and go to state 178
+
+
+State 150
+
+   71 CONDITIONAL: condSwitch lBracket . LOGICALOREXPRESSION rBracket lCurlyBracket CASELIST rCurlyBracket
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 179
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 151
+
+   24 STATEMENT: VARIABLEDECLARATION colon .
+
+    $default  reduce using rule 24 (STATEMENT)
+
+
+State 152
+
+   25 STATEMENT: ARRAYDECLARATION colon .
+
+    $default  reduce using rule 25 (STATEMENT)
+
+
+State 153
+
+   10 FUNCTIONDEFINITION: dataType identifier lBracket PARAMETERLIST rBracket lCurlyBracket STATEMENTLIST rCurlyBracket .
+
+    $default  reduce using rule 10 (FUNCTIONDEFINITION)
+
+
+State 154
+
+   27 STATEMENT: BREAKSTATEMENT colon .
+
+    $default  reduce using rule 27 (STATEMENT)
+
+
+State 155
+
+   28 STATEMENT: CONTINUESTATEMENT colon .
+
+    $default  reduce using rule 28 (STATEMENT)
+
+
+State 156
+
+   20 STATEMENTLIST: STATEMENT STATEMENTLIST .
+
+    $default  reduce using rule 20 (STATEMENTLIST)
+
+
+State 157
+
+   26 STATEMENT: ASSIGNMENT colon .
+
+    $default  reduce using rule 26 (STATEMENT)
+
+
+State 158
+
+   30 STATEMENT: ENUMERATIONSPECIFIER colon .
+
+    $default  reduce using rule 30 (STATEMENT)
+
+
+State 159
+
+   33 STATEMENT: FUNCTIONCALL colon .
+
+    $default  reduce using rule 33 (STATEMENT)
+
+
+State 160
+
+   36 ASSIGNMENT: SUBSCRIPT assign . LOGICALOREXPRESSION
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 180
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 161
+
+   34 STATEMENT: LOGICALOREXPRESSION colon .
+
+    $default  reduce using rule 34 (STATEMENT)
+
+
+State 162
+
+   37 ASSIGNMENT: FACTOR plusEquals . FACTOR
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+
+    FUNCTIONCALL  go to state 35
+    SUBSCRIPT     go to state 36
+    UNARYMINUS    go to state 47
+    FACTOR        go to state 181
+
+
+State 163
+
+   38 ASSIGNMENT: FACTOR minusEquals . FACTOR
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+
+    FUNCTIONCALL  go to state 35
+    SUBSCRIPT     go to state 36
+    UNARYMINUS    go to state 47
+    FACTOR        go to state 182
+
+
+State 164
+
+   39 ASSIGNMENT: FACTOR timesEquals . FACTOR
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+
+    FUNCTIONCALL  go to state 35
+    SUBSCRIPT     go to state 36
+    UNARYMINUS    go to state 47
+    FACTOR        go to state 183
+
+
+State 165
+
+   40 ASSIGNMENT: FACTOR divEquals . FACTOR
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+
+    FUNCTIONCALL  go to state 35
+    SUBSCRIPT     go to state 36
+    UNARYMINUS    go to state 47
+    FACTOR        go to state 184
+
+
+State 166
+
+   41 ASSIGNMENT: FACTOR modEquals . FACTOR
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+
+    FUNCTIONCALL  go to state 35
+    SUBSCRIPT     go to state 36
+    UNARYMINUS    go to state 47
+    FACTOR        go to state 185
+
+
+State 167
+
+   42 ASSIGNMENT: FACTOR andEquals . FACTOR
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+
+    FUNCTIONCALL  go to state 35
+    SUBSCRIPT     go to state 36
+    UNARYMINUS    go to state 47
+    FACTOR        go to state 186
+
+
+State 168
+
+   43 ASSIGNMENT: FACTOR orEquals . FACTOR
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+
+    FUNCTIONCALL  go to state 35
+    SUBSCRIPT     go to state 36
+    UNARYMINUS    go to state 47
+    FACTOR        go to state 187
+
+
+State 169
+
+   44 ASSIGNMENT: FACTOR xorEquals . FACTOR
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+
+    FUNCTIONCALL  go to state 35
+    SUBSCRIPT     go to state 36
+    UNARYMINUS    go to state 47
+    FACTOR        go to state 188
+
+
+State 170
+
+   45 ASSIGNMENT: FACTOR lShiftEquals . FACTOR
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+
+    FUNCTIONCALL  go to state 35
+    SUBSCRIPT     go to state 36
+    UNARYMINUS    go to state 47
+    FACTOR        go to state 189
+
+
+State 171
+
+   46 ASSIGNMENT: FACTOR rShiftEquals . FACTOR
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+
+    FUNCTIONCALL  go to state 35
+    SUBSCRIPT     go to state 36
+    UNARYMINUS    go to state 47
+    FACTOR        go to state 190
+
+
+State 172
+
+   65 CONDITIONAL: condIf lBracket LOGICALOREXPRESSION . rBracket STATEMENTLIST
+   66            | condIf lBracket LOGICALOREXPRESSION . rBracket STATEMENTLIST condElse STATEMENTLIST
+   67            | condIf lBracket LOGICALOREXPRESSION . rBracket lCurlyBracket STATEMENTLIST rCurlyBracket condElse STATEMENTLIST
+   68            | condIf lBracket LOGICALOREXPRESSION . rBracket STATEMENTLIST condElse lCurlyBracket STATEMENTLIST rCurlyBracket
+   69            | condIf lBracket LOGICALOREXPRESSION . rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   70            | condIf lBracket LOGICALOREXPRESSION . rBracket lCurlyBracket STATEMENTLIST rCurlyBracket condElse lCurlyBracket STATEMENTLIST rCurlyBracket
+   91 LOGICALOREXPRESSION: LOGICALOREXPRESSION . logicalOrOp LOGICALANDEXPRESSION
+
+    logicalOrOp  shift, and go to state 68
+    rBracket     shift, and go to state 191
+
+
+State 173
+
+   35 ASSIGNMENT: identifier . assign ASSIGNMENT
+   54 FUNCTIONCALL: identifier . lBracket CONCRETEPARAMETERLIST rBracket
+   78 SUBSCRIPT: identifier . lSquareBracket LOGICALOREXPRESSION rSquareBracket
+  116 FACTOR: identifier .
+
+    assign          shift, and go to state 145
+    lBracket        shift, and go to state 58
+    lSquareBracket  shift, and go to state 59
+
+    $default  reduce using rule 116 (FACTOR)
+
+
+State 174
+
+   35 ASSIGNMENT: identifier assign ASSIGNMENT .
+
+    $default  reduce using rule 35 (ASSIGNMENT)
+
+
+State 175
+
+   47 ASSIGNMENT: LOGICALOREXPRESSION .
+   91 LOGICALOREXPRESSION: LOGICALOREXPRESSION . logicalOrOp LOGICALANDEXPRESSION
+
+    logicalOrOp  shift, and go to state 68
+
+    $default  reduce using rule 47 (ASSIGNMENT)
+
+
+State 176
+
+   59 LOOP: loopWhile lBracket LOGICALOREXPRESSION . rBracket STATEMENTLIST
+   60     | loopWhile lBracket LOGICALOREXPRESSION . rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   61     | loopWhile lBracket LOGICALOREXPRESSION . rBracket lCurlyBracket rCurlyBracket
+   91 LOGICALOREXPRESSION: LOGICALOREXPRESSION . logicalOrOp LOGICALANDEXPRESSION
+
+    logicalOrOp  shift, and go to state 68
+    rBracket     shift, and go to state 192
+
+
+State 177
+
+   62 LOOP: loopFor lBracket ASSIGNMENT . colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket STATEMENTLIST
+   63     | loopFor lBracket ASSIGNMENT . colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   64     | loopFor lBracket ASSIGNMENT . colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket lCurlyBracket rCurlyBracket
+
+    colon  shift, and go to state 193
+
+
+State 178
+
+   58 RETURNSTATEMENT: ret LOGICALOREXPRESSION colon .
+
+    $default  reduce using rule 58 (RETURNSTATEMENT)
+
+
+State 179
+
+   71 CONDITIONAL: condSwitch lBracket LOGICALOREXPRESSION . rBracket lCurlyBracket CASELIST rCurlyBracket
+   91 LOGICALOREXPRESSION: LOGICALOREXPRESSION . logicalOrOp LOGICALANDEXPRESSION
+
+    logicalOrOp  shift, and go to state 68
+    rBracket     shift, and go to state 194
+
+
+State 180
+
+   36 ASSIGNMENT: SUBSCRIPT assign LOGICALOREXPRESSION .
+   91 LOGICALOREXPRESSION: LOGICALOREXPRESSION . logicalOrOp LOGICALANDEXPRESSION
+
+    logicalOrOp  shift, and go to state 68
+
+    $default  reduce using rule 36 (ASSIGNMENT)
+
+
+State 181
+
+   37 ASSIGNMENT: FACTOR plusEquals FACTOR .
+
+    $default  reduce using rule 37 (ASSIGNMENT)
+
+
+State 182
+
+   38 ASSIGNMENT: FACTOR minusEquals FACTOR .
+
+    $default  reduce using rule 38 (ASSIGNMENT)
+
+
+State 183
+
+   39 ASSIGNMENT: FACTOR timesEquals FACTOR .
+
+    $default  reduce using rule 39 (ASSIGNMENT)
+
+
+State 184
+
+   40 ASSIGNMENT: FACTOR divEquals FACTOR .
+
+    $default  reduce using rule 40 (ASSIGNMENT)
+
+
+State 185
+
+   41 ASSIGNMENT: FACTOR modEquals FACTOR .
+
+    $default  reduce using rule 41 (ASSIGNMENT)
+
+
+State 186
+
+   42 ASSIGNMENT: FACTOR andEquals FACTOR .
+
+    $default  reduce using rule 42 (ASSIGNMENT)
+
+
+State 187
+
+   43 ASSIGNMENT: FACTOR orEquals FACTOR .
+
+    $default  reduce using rule 43 (ASSIGNMENT)
+
+
+State 188
+
+   44 ASSIGNMENT: FACTOR xorEquals FACTOR .
+
+    $default  reduce using rule 44 (ASSIGNMENT)
+
+
+State 189
+
+   45 ASSIGNMENT: FACTOR lShiftEquals FACTOR .
+
+    $default  reduce using rule 45 (ASSIGNMENT)
+
+
+State 190
+
+   46 ASSIGNMENT: FACTOR rShiftEquals FACTOR .
+
+    $default  reduce using rule 46 (ASSIGNMENT)
+
+
+State 191
+
+   65 CONDITIONAL: condIf lBracket LOGICALOREXPRESSION rBracket . STATEMENTLIST
+   66            | condIf lBracket LOGICALOREXPRESSION rBracket . STATEMENTLIST condElse STATEMENTLIST
+   67            | condIf lBracket LOGICALOREXPRESSION rBracket . lCurlyBracket STATEMENTLIST rCurlyBracket condElse STATEMENTLIST
+   68            | condIf lBracket LOGICALOREXPRESSION rBracket . STATEMENTLIST condElse lCurlyBracket STATEMENTLIST rCurlyBracket
+   69            | condIf lBracket LOGICALOREXPRESSION rBracket . lCurlyBracket STATEMENTLIST rCurlyBracket
+   70            | condIf lBracket LOGICALOREXPRESSION rBracket . lCurlyBracket STATEMENTLIST rCurlyBracket condElse lCurlyBracket STATEMENTLIST rCurlyBracket
+
+    minus          shift, and go to state 28
+    condIf         shift, and go to state 117
+    lBracket       shift, and go to state 29
+    lCurlyBracket  shift, and go to state 195
+    breakT         shift, and go to state 119
+    enumT          shift, and go to state 1
+    logicalNotOp   shift, and go to state 30
+    number         shift, and go to state 31
+    identifier     shift, and go to state 120
+    dataType       shift, and go to state 121
+    colon          shift, and go to state 122
+    loopWhile      shift, and go to state 123
+    loopFor        shift, and go to state 124
+    ret            shift, and go to state 125
+    condSwitch     shift, and go to state 126
+    continueT      shift, and go to state 127
+    plusPlus       shift, and go to state 33
+    minusMinus     shift, and go to state 34
+
+    VARIABLEDECLARATION       go to state 128
+    ARRAYDECLARATION          go to state 129
+    STATEMENTLIST             go to state 196
+    BREAKSTATEMENT            go to state 131
+    CONTINUESTATEMENT         go to state 132
+    STATEMENT                 go to state 133
+    ASSIGNMENT                go to state 134
+    ENUMERATIONSPECIFIER      go to state 135
+    FUNCTIONCALL              go to state 136
+    RETURNSTATEMENT           go to state 137
+    LOOP                      go to state 138
+    CONDITIONAL               go to state 139
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 141
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 192
+
+   59 LOOP: loopWhile lBracket LOGICALOREXPRESSION rBracket . STATEMENTLIST
+   60     | loopWhile lBracket LOGICALOREXPRESSION rBracket . lCurlyBracket STATEMENTLIST rCurlyBracket
+   61     | loopWhile lBracket LOGICALOREXPRESSION rBracket . lCurlyBracket rCurlyBracket
+
+    minus          shift, and go to state 28
+    condIf         shift, and go to state 117
+    lBracket       shift, and go to state 29
+    lCurlyBracket  shift, and go to state 197
+    breakT         shift, and go to state 119
+    enumT          shift, and go to state 1
+    logicalNotOp   shift, and go to state 30
+    number         shift, and go to state 31
+    identifier     shift, and go to state 120
+    dataType       shift, and go to state 121
+    colon          shift, and go to state 122
+    loopWhile      shift, and go to state 123
+    loopFor        shift, and go to state 124
+    ret            shift, and go to state 125
+    condSwitch     shift, and go to state 126
+    continueT      shift, and go to state 127
+    plusPlus       shift, and go to state 33
+    minusMinus     shift, and go to state 34
+
+    VARIABLEDECLARATION       go to state 128
+    ARRAYDECLARATION          go to state 129
+    STATEMENTLIST             go to state 198
+    BREAKSTATEMENT            go to state 131
+    CONTINUESTATEMENT         go to state 132
+    STATEMENT                 go to state 133
+    ASSIGNMENT                go to state 134
+    ENUMERATIONSPECIFIER      go to state 135
+    FUNCTIONCALL              go to state 136
+    RETURNSTATEMENT           go to state 137
+    LOOP                      go to state 138
+    CONDITIONAL               go to state 139
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 141
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 193
+
+   62 LOOP: loopFor lBracket ASSIGNMENT colon . LOGICALOREXPRESSION colon ASSIGNMENT rBracket STATEMENTLIST
+   63     | loopFor lBracket ASSIGNMENT colon . LOGICALOREXPRESSION colon ASSIGNMENT rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   64     | loopFor lBracket ASSIGNMENT colon . LOGICALOREXPRESSION colon ASSIGNMENT rBracket lCurlyBracket rCurlyBracket
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 199
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 194
+
+   71 CONDITIONAL: condSwitch lBracket LOGICALOREXPRESSION rBracket . lCurlyBracket CASELIST rCurlyBracket
+
+    lCurlyBracket  shift, and go to state 200
+
+
+State 195
+
+   67 CONDITIONAL: condIf lBracket LOGICALOREXPRESSION rBracket lCurlyBracket . STATEMENTLIST rCurlyBracket condElse STATEMENTLIST
+   69            | condIf lBracket LOGICALOREXPRESSION rBracket lCurlyBracket . STATEMENTLIST rCurlyBracket
+   70            | condIf lBracket LOGICALOREXPRESSION rBracket lCurlyBracket . STATEMENTLIST rCurlyBracket condElse lCurlyBracket STATEMENTLIST rCurlyBracket
+
+    minus         shift, and go to state 28
+    condIf        shift, and go to state 117
+    lBracket      shift, and go to state 29
+    breakT        shift, and go to state 119
+    enumT         shift, and go to state 1
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 120
+    dataType      shift, and go to state 121
+    colon         shift, and go to state 122
+    loopWhile     shift, and go to state 123
+    loopFor       shift, and go to state 124
+    ret           shift, and go to state 125
+    condSwitch    shift, and go to state 126
+    continueT     shift, and go to state 127
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    VARIABLEDECLARATION       go to state 128
+    ARRAYDECLARATION          go to state 129
+    STATEMENTLIST             go to state 201
+    BREAKSTATEMENT            go to state 131
+    CONTINUESTATEMENT         go to state 132
+    STATEMENT                 go to state 133
+    ASSIGNMENT                go to state 134
+    ENUMERATIONSPECIFIER      go to state 135
+    FUNCTIONCALL              go to state 136
+    RETURNSTATEMENT           go to state 137
+    LOOP                      go to state 138
+    CONDITIONAL               go to state 139
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 141
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 196
+
+   65 CONDITIONAL: condIf lBracket LOGICALOREXPRESSION rBracket STATEMENTLIST .
+   66            | condIf lBracket LOGICALOREXPRESSION rBracket STATEMENTLIST . condElse STATEMENTLIST
+   68            | condIf lBracket LOGICALOREXPRESSION rBracket STATEMENTLIST . condElse lCurlyBracket STATEMENTLIST rCurlyBracket
+
+    condElse  shift, and go to state 202
+
+    $default  reduce using rule 65 (CONDITIONAL)
+
+
+State 197
+
+   60 LOOP: loopWhile lBracket LOGICALOREXPRESSION rBracket lCurlyBracket . STATEMENTLIST rCurlyBracket
+   61     | loopWhile lBracket LOGICALOREXPRESSION rBracket lCurlyBracket . rCurlyBracket
+
+    minus          shift, and go to state 28
+    condIf         shift, and go to state 117
+    lBracket       shift, and go to state 29
+    rCurlyBracket  shift, and go to state 203
+    breakT         shift, and go to state 119
+    enumT          shift, and go to state 1
+    logicalNotOp   shift, and go to state 30
+    number         shift, and go to state 31
+    identifier     shift, and go to state 120
+    dataType       shift, and go to state 121
+    colon          shift, and go to state 122
+    loopWhile      shift, and go to state 123
+    loopFor        shift, and go to state 124
+    ret            shift, and go to state 125
+    condSwitch     shift, and go to state 126
+    continueT      shift, and go to state 127
+    plusPlus       shift, and go to state 33
+    minusMinus     shift, and go to state 34
+
+    VARIABLEDECLARATION       go to state 128
+    ARRAYDECLARATION          go to state 129
+    STATEMENTLIST             go to state 204
+    BREAKSTATEMENT            go to state 131
+    CONTINUESTATEMENT         go to state 132
+    STATEMENT                 go to state 133
+    ASSIGNMENT                go to state 134
+    ENUMERATIONSPECIFIER      go to state 135
+    FUNCTIONCALL              go to state 136
+    RETURNSTATEMENT           go to state 137
+    LOOP                      go to state 138
+    CONDITIONAL               go to state 139
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 141
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 198
+
+   59 LOOP: loopWhile lBracket LOGICALOREXPRESSION rBracket STATEMENTLIST .
+
+    $default  reduce using rule 59 (LOOP)
+
+
+State 199
+
+   62 LOOP: loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION . colon ASSIGNMENT rBracket STATEMENTLIST
+   63     | loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION . colon ASSIGNMENT rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   64     | loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION . colon ASSIGNMENT rBracket lCurlyBracket rCurlyBracket
+   91 LOGICALOREXPRESSION: LOGICALOREXPRESSION . logicalOrOp LOGICALANDEXPRESSION
+
+    logicalOrOp  shift, and go to state 68
+    colon        shift, and go to state 205
+
+
+State 200
+
+   71 CONDITIONAL: condSwitch lBracket LOGICALOREXPRESSION rBracket lCurlyBracket . CASELIST rCurlyBracket
+
+    minus         shift, and go to state 28
+    condIf        shift, and go to state 117
+    lBracket      shift, and go to state 29
+    breakT        shift, and go to state 119
+    enumT         shift, and go to state 1
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 120
+    dataType      shift, and go to state 121
+    colon         shift, and go to state 122
+    loopWhile     shift, and go to state 123
+    loopFor       shift, and go to state 124
+    ret           shift, and go to state 125
+    caseT         shift, and go to state 206
+    defaultT      shift, and go to state 207
+    condSwitch    shift, and go to state 126
+    continueT     shift, and go to state 127
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    $default  reduce using rule 75 (CASELIST)
+
+    VARIABLEDECLARATION       go to state 128
+    ARRAYDECLARATION          go to state 129
+    STATEMENTLIST             go to state 208
+    BREAKSTATEMENT            go to state 131
+    CONTINUESTATEMENT         go to state 132
+    STATEMENT                 go to state 133
+    ASSIGNMENT                go to state 134
+    ENUMERATIONSPECIFIER      go to state 135
+    FUNCTIONCALL              go to state 136
+    RETURNSTATEMENT           go to state 137
+    LOOP                      go to state 138
+    CONDITIONAL               go to state 139
+    CASELIST                  go to state 209
+    CASE                      go to state 210
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 141
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 201
+
+   67 CONDITIONAL: condIf lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST . rCurlyBracket condElse STATEMENTLIST
+   69            | condIf lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST . rCurlyBracket
+   70            | condIf lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST . rCurlyBracket condElse lCurlyBracket STATEMENTLIST rCurlyBracket
+
+    rCurlyBracket  shift, and go to state 211
+
+
+State 202
+
+   66 CONDITIONAL: condIf lBracket LOGICALOREXPRESSION rBracket STATEMENTLIST condElse . STATEMENTLIST
+   68            | condIf lBracket LOGICALOREXPRESSION rBracket STATEMENTLIST condElse . lCurlyBracket STATEMENTLIST rCurlyBracket
+
+    minus          shift, and go to state 28
+    condIf         shift, and go to state 117
+    lBracket       shift, and go to state 29
+    lCurlyBracket  shift, and go to state 212
+    breakT         shift, and go to state 119
+    enumT          shift, and go to state 1
+    logicalNotOp   shift, and go to state 30
+    number         shift, and go to state 31
+    identifier     shift, and go to state 120
+    dataType       shift, and go to state 121
+    colon          shift, and go to state 122
+    loopWhile      shift, and go to state 123
+    loopFor        shift, and go to state 124
+    ret            shift, and go to state 125
+    condSwitch     shift, and go to state 126
+    continueT      shift, and go to state 127
+    plusPlus       shift, and go to state 33
+    minusMinus     shift, and go to state 34
+
+    VARIABLEDECLARATION       go to state 128
+    ARRAYDECLARATION          go to state 129
+    STATEMENTLIST             go to state 213
+    BREAKSTATEMENT            go to state 131
+    CONTINUESTATEMENT         go to state 132
+    STATEMENT                 go to state 133
+    ASSIGNMENT                go to state 134
+    ENUMERATIONSPECIFIER      go to state 135
+    FUNCTIONCALL              go to state 136
+    RETURNSTATEMENT           go to state 137
+    LOOP                      go to state 138
+    CONDITIONAL               go to state 139
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 141
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 203
+
+   61 LOOP: loopWhile lBracket LOGICALOREXPRESSION rBracket lCurlyBracket rCurlyBracket .
+
+    $default  reduce using rule 61 (LOOP)
+
+
+State 204
+
+   60 LOOP: loopWhile lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST . rCurlyBracket
+
+    rCurlyBracket  shift, and go to state 214
+
+
+State 205
+
+   62 LOOP: loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon . ASSIGNMENT rBracket STATEMENTLIST
+   63     | loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon . ASSIGNMENT rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   64     | loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon . ASSIGNMENT rBracket lCurlyBracket rCurlyBracket
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 173
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    ASSIGNMENT                go to state 215
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 175
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 206
+
+   76 CASE: caseT . LOGICALOREXPRESSION colonT STATEMENTLIST
+
+    minus         shift, and go to state 28
+    lBracket      shift, and go to state 29
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 32
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    FUNCTIONCALL              go to state 35
+    SUBSCRIPT                 go to state 36
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 216
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 48
+
+
+State 207
+
+   77 CASE: defaultT . colonT STATEMENTLIST
+
+    colonT  shift, and go to state 217
+
+
+State 208
+
+   74 CASELIST: STATEMENTLIST . CASELIST
+
+    minus         shift, and go to state 28
+    condIf        shift, and go to state 117
+    lBracket      shift, and go to state 29
+    breakT        shift, and go to state 119
+    enumT         shift, and go to state 1
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 120
+    dataType      shift, and go to state 121
+    colon         shift, and go to state 122
+    loopWhile     shift, and go to state 123
+    loopFor       shift, and go to state 124
+    ret           shift, and go to state 125
+    caseT         shift, and go to state 206
+    defaultT      shift, and go to state 207
+    condSwitch    shift, and go to state 126
+    continueT     shift, and go to state 127
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    $default  reduce using rule 75 (CASELIST)
+
+    VARIABLEDECLARATION       go to state 128
+    ARRAYDECLARATION          go to state 129
+    STATEMENTLIST             go to state 208
+    BREAKSTATEMENT            go to state 131
+    CONTINUESTATEMENT         go to state 132
+    STATEMENT                 go to state 133
+    ASSIGNMENT                go to state 134
+    ENUMERATIONSPECIFIER      go to state 135
+    FUNCTIONCALL              go to state 136
+    RETURNSTATEMENT           go to state 137
+    LOOP                      go to state 138
+    CONDITIONAL               go to state 139
+    CASELIST                  go to state 218
+    CASE                      go to state 210
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 141
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 209
+
+   71 CONDITIONAL: condSwitch lBracket LOGICALOREXPRESSION rBracket lCurlyBracket CASELIST . rCurlyBracket
+
+    rCurlyBracket  shift, and go to state 219
+
+
+State 210
+
+   72 CASELIST: CASE .
+   73         | CASE . CASELIST
+
+    minus         shift, and go to state 28
+    condIf        shift, and go to state 117
+    lBracket      shift, and go to state 29
+    breakT        shift, and go to state 119
+    enumT         shift, and go to state 1
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 120
+    dataType      shift, and go to state 121
+    colon         shift, and go to state 122
+    loopWhile     shift, and go to state 123
+    loopFor       shift, and go to state 124
+    ret           shift, and go to state 125
+    caseT         shift, and go to state 206
+    defaultT      shift, and go to state 207
+    condSwitch    shift, and go to state 126
+    continueT     shift, and go to state 127
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    rCurlyBracket  reduce using rule 72 (CASELIST)
+    rCurlyBracket  [reduce using rule 75 (CASELIST)]
+    $default       reduce using rule 72 (CASELIST)
+
+    VARIABLEDECLARATION       go to state 128
+    ARRAYDECLARATION          go to state 129
+    STATEMENTLIST             go to state 208
+    BREAKSTATEMENT            go to state 131
+    CONTINUESTATEMENT         go to state 132
+    STATEMENT                 go to state 133
+    ASSIGNMENT                go to state 134
+    ENUMERATIONSPECIFIER      go to state 135
+    FUNCTIONCALL              go to state 136
+    RETURNSTATEMENT           go to state 137
+    LOOP                      go to state 138
+    CONDITIONAL               go to state 139
+    CASELIST                  go to state 220
+    CASE                      go to state 210
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 141
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 211
+
+   67 CONDITIONAL: condIf lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket . condElse STATEMENTLIST
+   69            | condIf lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket .
+   70            | condIf lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket . condElse lCurlyBracket STATEMENTLIST rCurlyBracket
+
+    condElse  shift, and go to state 221
+
+    $default  reduce using rule 69 (CONDITIONAL)
+
+
+State 212
+
+   68 CONDITIONAL: condIf lBracket LOGICALOREXPRESSION rBracket STATEMENTLIST condElse lCurlyBracket . STATEMENTLIST rCurlyBracket
+
+    minus         shift, and go to state 28
+    condIf        shift, and go to state 117
+    lBracket      shift, and go to state 29
+    breakT        shift, and go to state 119
+    enumT         shift, and go to state 1
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 120
+    dataType      shift, and go to state 121
+    colon         shift, and go to state 122
+    loopWhile     shift, and go to state 123
+    loopFor       shift, and go to state 124
+    ret           shift, and go to state 125
+    condSwitch    shift, and go to state 126
+    continueT     shift, and go to state 127
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    VARIABLEDECLARATION       go to state 128
+    ARRAYDECLARATION          go to state 129
+    STATEMENTLIST             go to state 222
+    BREAKSTATEMENT            go to state 131
+    CONTINUESTATEMENT         go to state 132
+    STATEMENT                 go to state 133
+    ASSIGNMENT                go to state 134
+    ENUMERATIONSPECIFIER      go to state 135
+    FUNCTIONCALL              go to state 136
+    RETURNSTATEMENT           go to state 137
+    LOOP                      go to state 138
+    CONDITIONAL               go to state 139
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 141
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 213
+
+   66 CONDITIONAL: condIf lBracket LOGICALOREXPRESSION rBracket STATEMENTLIST condElse STATEMENTLIST .
+
+    $default  reduce using rule 66 (CONDITIONAL)
+
+
+State 214
+
+   60 LOOP: loopWhile lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket .
+
+    $default  reduce using rule 60 (LOOP)
+
+
+State 215
+
+   62 LOOP: loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT . rBracket STATEMENTLIST
+   63     | loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT . rBracket lCurlyBracket STATEMENTLIST rCurlyBracket
+   64     | loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT . rBracket lCurlyBracket rCurlyBracket
+
+    rBracket  shift, and go to state 223
+
+
+State 216
+
+   76 CASE: caseT LOGICALOREXPRESSION . colonT STATEMENTLIST
+   91 LOGICALOREXPRESSION: LOGICALOREXPRESSION . logicalOrOp LOGICALANDEXPRESSION
+
+    logicalOrOp  shift, and go to state 68
+    colonT       shift, and go to state 224
+
+
+State 217
+
+   77 CASE: defaultT colonT . STATEMENTLIST
+
+    minus         shift, and go to state 28
+    condIf        shift, and go to state 117
+    lBracket      shift, and go to state 29
+    breakT        shift, and go to state 119
+    enumT         shift, and go to state 1
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 120
+    dataType      shift, and go to state 121
+    colon         shift, and go to state 122
+    loopWhile     shift, and go to state 123
+    loopFor       shift, and go to state 124
+    ret           shift, and go to state 125
+    condSwitch    shift, and go to state 126
+    continueT     shift, and go to state 127
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    VARIABLEDECLARATION       go to state 128
+    ARRAYDECLARATION          go to state 129
+    STATEMENTLIST             go to state 225
+    BREAKSTATEMENT            go to state 131
+    CONTINUESTATEMENT         go to state 132
+    STATEMENT                 go to state 133
+    ASSIGNMENT                go to state 134
+    ENUMERATIONSPECIFIER      go to state 135
+    FUNCTIONCALL              go to state 136
+    RETURNSTATEMENT           go to state 137
+    LOOP                      go to state 138
+    CONDITIONAL               go to state 139
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 141
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 218
+
+   74 CASELIST: STATEMENTLIST CASELIST .
+
+    $default  reduce using rule 74 (CASELIST)
+
+
+State 219
+
+   71 CONDITIONAL: condSwitch lBracket LOGICALOREXPRESSION rBracket lCurlyBracket CASELIST rCurlyBracket .
+
+    $default  reduce using rule 71 (CONDITIONAL)
+
+
+State 220
+
+   73 CASELIST: CASE CASELIST .
+
+    $default  reduce using rule 73 (CASELIST)
+
+
+State 221
+
+   67 CONDITIONAL: condIf lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket condElse . STATEMENTLIST
+   70            | condIf lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket condElse . lCurlyBracket STATEMENTLIST rCurlyBracket
+
+    minus          shift, and go to state 28
+    condIf         shift, and go to state 117
+    lBracket       shift, and go to state 29
+    lCurlyBracket  shift, and go to state 226
+    breakT         shift, and go to state 119
+    enumT          shift, and go to state 1
+    logicalNotOp   shift, and go to state 30
+    number         shift, and go to state 31
+    identifier     shift, and go to state 120
+    dataType       shift, and go to state 121
+    colon          shift, and go to state 122
+    loopWhile      shift, and go to state 123
+    loopFor        shift, and go to state 124
+    ret            shift, and go to state 125
+    condSwitch     shift, and go to state 126
+    continueT      shift, and go to state 127
+    plusPlus       shift, and go to state 33
+    minusMinus     shift, and go to state 34
+
+    VARIABLEDECLARATION       go to state 128
+    ARRAYDECLARATION          go to state 129
+    STATEMENTLIST             go to state 227
+    BREAKSTATEMENT            go to state 131
+    CONTINUESTATEMENT         go to state 132
+    STATEMENT                 go to state 133
+    ASSIGNMENT                go to state 134
+    ENUMERATIONSPECIFIER      go to state 135
+    FUNCTIONCALL              go to state 136
+    RETURNSTATEMENT           go to state 137
+    LOOP                      go to state 138
+    CONDITIONAL               go to state 139
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 141
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 222
+
+   68 CONDITIONAL: condIf lBracket LOGICALOREXPRESSION rBracket STATEMENTLIST condElse lCurlyBracket STATEMENTLIST . rCurlyBracket
+
+    rCurlyBracket  shift, and go to state 228
+
+
+State 223
+
+   62 LOOP: loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket . STATEMENTLIST
+   63     | loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket . lCurlyBracket STATEMENTLIST rCurlyBracket
+   64     | loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket . lCurlyBracket rCurlyBracket
+
+    minus          shift, and go to state 28
+    condIf         shift, and go to state 117
+    lBracket       shift, and go to state 29
+    lCurlyBracket  shift, and go to state 229
+    breakT         shift, and go to state 119
+    enumT          shift, and go to state 1
+    logicalNotOp   shift, and go to state 30
+    number         shift, and go to state 31
+    identifier     shift, and go to state 120
+    dataType       shift, and go to state 121
+    colon          shift, and go to state 122
+    loopWhile      shift, and go to state 123
+    loopFor        shift, and go to state 124
+    ret            shift, and go to state 125
+    condSwitch     shift, and go to state 126
+    continueT      shift, and go to state 127
+    plusPlus       shift, and go to state 33
+    minusMinus     shift, and go to state 34
+
+    VARIABLEDECLARATION       go to state 128
+    ARRAYDECLARATION          go to state 129
+    STATEMENTLIST             go to state 230
+    BREAKSTATEMENT            go to state 131
+    CONTINUESTATEMENT         go to state 132
+    STATEMENT                 go to state 133
+    ASSIGNMENT                go to state 134
+    ENUMERATIONSPECIFIER      go to state 135
+    FUNCTIONCALL              go to state 136
+    RETURNSTATEMENT           go to state 137
+    LOOP                      go to state 138
+    CONDITIONAL               go to state 139
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 141
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 224
+
+   76 CASE: caseT LOGICALOREXPRESSION colonT . STATEMENTLIST
+
+    minus         shift, and go to state 28
+    condIf        shift, and go to state 117
+    lBracket      shift, and go to state 29
+    breakT        shift, and go to state 119
+    enumT         shift, and go to state 1
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 120
+    dataType      shift, and go to state 121
+    colon         shift, and go to state 122
+    loopWhile     shift, and go to state 123
+    loopFor       shift, and go to state 124
+    ret           shift, and go to state 125
+    condSwitch    shift, and go to state 126
+    continueT     shift, and go to state 127
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    VARIABLEDECLARATION       go to state 128
+    ARRAYDECLARATION          go to state 129
+    STATEMENTLIST             go to state 231
+    BREAKSTATEMENT            go to state 131
+    CONTINUESTATEMENT         go to state 132
+    STATEMENT                 go to state 133
+    ASSIGNMENT                go to state 134
+    ENUMERATIONSPECIFIER      go to state 135
+    FUNCTIONCALL              go to state 136
+    RETURNSTATEMENT           go to state 137
+    LOOP                      go to state 138
+    CONDITIONAL               go to state 139
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 141
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 225
+
+   77 CASE: defaultT colonT STATEMENTLIST .
+
+    $default  reduce using rule 77 (CASE)
+
+
+State 226
+
+   70 CONDITIONAL: condIf lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket condElse lCurlyBracket . STATEMENTLIST rCurlyBracket
+
+    minus         shift, and go to state 28
+    condIf        shift, and go to state 117
+    lBracket      shift, and go to state 29
+    breakT        shift, and go to state 119
+    enumT         shift, and go to state 1
+    logicalNotOp  shift, and go to state 30
+    number        shift, and go to state 31
+    identifier    shift, and go to state 120
+    dataType      shift, and go to state 121
+    colon         shift, and go to state 122
+    loopWhile     shift, and go to state 123
+    loopFor       shift, and go to state 124
+    ret           shift, and go to state 125
+    condSwitch    shift, and go to state 126
+    continueT     shift, and go to state 127
+    plusPlus      shift, and go to state 33
+    minusMinus    shift, and go to state 34
+
+    VARIABLEDECLARATION       go to state 128
+    ARRAYDECLARATION          go to state 129
+    STATEMENTLIST             go to state 232
+    BREAKSTATEMENT            go to state 131
+    CONTINUESTATEMENT         go to state 132
+    STATEMENT                 go to state 133
+    ASSIGNMENT                go to state 134
+    ENUMERATIONSPECIFIER      go to state 135
+    FUNCTIONCALL              go to state 136
+    RETURNSTATEMENT           go to state 137
+    LOOP                      go to state 138
+    CONDITIONAL               go to state 139
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 141
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 227
+
+   67 CONDITIONAL: condIf lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket condElse STATEMENTLIST .
+
+    $default  reduce using rule 67 (CONDITIONAL)
+
+
+State 228
+
+   68 CONDITIONAL: condIf lBracket LOGICALOREXPRESSION rBracket STATEMENTLIST condElse lCurlyBracket STATEMENTLIST rCurlyBracket .
+
+    $default  reduce using rule 68 (CONDITIONAL)
+
+
+State 229
+
+   63 LOOP: loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket lCurlyBracket . STATEMENTLIST rCurlyBracket
+   64     | loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket lCurlyBracket . rCurlyBracket
+
+    minus          shift, and go to state 28
+    condIf         shift, and go to state 117
+    lBracket       shift, and go to state 29
+    rCurlyBracket  shift, and go to state 233
+    breakT         shift, and go to state 119
+    enumT          shift, and go to state 1
+    logicalNotOp   shift, and go to state 30
+    number         shift, and go to state 31
+    identifier     shift, and go to state 120
+    dataType       shift, and go to state 121
+    colon          shift, and go to state 122
+    loopWhile      shift, and go to state 123
+    loopFor        shift, and go to state 124
+    ret            shift, and go to state 125
+    condSwitch     shift, and go to state 126
+    continueT      shift, and go to state 127
+    plusPlus       shift, and go to state 33
+    minusMinus     shift, and go to state 34
+
+    VARIABLEDECLARATION       go to state 128
+    ARRAYDECLARATION          go to state 129
+    STATEMENTLIST             go to state 234
+    BREAKSTATEMENT            go to state 131
+    CONTINUESTATEMENT         go to state 132
+    STATEMENT                 go to state 133
+    ASSIGNMENT                go to state 134
+    ENUMERATIONSPECIFIER      go to state 135
+    FUNCTIONCALL              go to state 136
+    RETURNSTATEMENT           go to state 137
+    LOOP                      go to state 138
+    CONDITIONAL               go to state 139
+    SUBSCRIPT                 go to state 140
+    EQUALITYEXPRESSION        go to state 37
+    ANDEXPRESSION             go to state 38
+    EXCLUSIVEOREXPRESSION     go to state 39
+    INCLUSIVEOREXPRESSION     go to state 40
+    LOGICALANDEXPRESSION      go to state 41
+    LOGICALOREXPRESSION       go to state 141
+    RELATIONALEXPRESSION      go to state 43
+    SHIFTEXPRESSION           go to state 44
+    ADDITIVEEXPRESSION        go to state 45
+    MULTIPLICATIVEEXPRESSION  go to state 46
+    UNARYMINUS                go to state 47
+    FACTOR                    go to state 142
+
+
+State 230
+
+   62 LOOP: loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket STATEMENTLIST .
+
+    $default  reduce using rule 62 (LOOP)
+
+
+State 231
+
+   76 CASE: caseT LOGICALOREXPRESSION colonT STATEMENTLIST .
+
+    $default  reduce using rule 76 (CASE)
+
+
+State 232
+
+   70 CONDITIONAL: condIf lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket condElse lCurlyBracket STATEMENTLIST . rCurlyBracket
+
+    rCurlyBracket  shift, and go to state 235
+
+
+State 233
+
+   64 LOOP: loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket lCurlyBracket rCurlyBracket .
+
+    $default  reduce using rule 64 (LOOP)
+
+
+State 234
+
+   63 LOOP: loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket lCurlyBracket STATEMENTLIST . rCurlyBracket
+
+    rCurlyBracket  shift, and go to state 236
+
+
+State 235
+
+   70 CONDITIONAL: condIf lBracket LOGICALOREXPRESSION rBracket lCurlyBracket STATEMENTLIST rCurlyBracket condElse lCurlyBracket STATEMENTLIST rCurlyBracket .
+
+    $default  reduce using rule 70 (CONDITIONAL)
+
+
+State 236
+
+   63 LOOP: loopFor lBracket ASSIGNMENT colon LOGICALOREXPRESSION colon ASSIGNMENT rBracket lCurlyBracket STATEMENTLIST rCurlyBracket .
+
+    $default  reduce using rule 63 (LOOP)

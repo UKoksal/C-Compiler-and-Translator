@@ -1,0 +1,48 @@
+How do curly braces solve the dangling else problem?
+Do I need to still push 4 registers if there are less than 4 arguments?
+Return values of loops etc?
+Signed and unsigned multiplication and division do we need the u versions?
+Check what goes in the condition of while and if.
+Noticed a weird nop and andi with less than what is that about?
+
+Almost certain about this but are right shifts undefined?
+What sets c90 apart, is it a subset of c++ so are they identical for our intents?
+What's up with break in division and the bne?
+
+
+Removing conditionals removed 1 conflict,
+removing the second rule for a factor removed another.
+
+
+Empty parameter list in function call causes segfault
+
+There seems to be a problem when I declare variables later on, this code for example results in incorrect frame allocation for a and b. I think this is illegal for c90 though
+int main() {
+ int b;
+ int c;
+ c = 5;
+ b = fib(69);
+ if(c == 5){
+   return b;
+ }
+}
+int fib(int n){
+  if(n == 1){
+    return 1;
+  }else{
+    if(n == 2){
+      return 13;
+    }else{
+        int a;
+        int b;
+        a = n - 1;
+        b = n - 2;
+      return a;
+    }
+  }
+}
+
+ b = fib(12, 5,3,4, 5, 6)-2; problem with the space with the minus here
+
+Do we need to worry about coercing types in a switch statement, do we need to ensure that what follows a case is a constant expression?
+Make sure array declarations can have constant expressions
